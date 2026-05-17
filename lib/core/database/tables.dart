@@ -19,6 +19,7 @@ class Exercises extends Table {
   IntColumn get sessionId => integer().references(WorkoutSessions, #id)();
   TextColumn get name => text()();
   IntColumn get orderIndex => integer()();
+  IntColumn get restSeconds => integer().nullable()();
 }
 
 @DataClassName('WorkoutSet')

@@ -133,6 +133,7 @@ class _RoutineTile extends ConsumerWidget {
           sessionId: Value(session.id),
           name: Value(ex.name),
           orderIndex: Value(order++),
+          restSeconds: Value(ex.restSeconds),
         ),
       );
       for (int i = 0; i < ex.sets.length; i++) {

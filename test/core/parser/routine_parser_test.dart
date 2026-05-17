@@ -72,19 +72,53 @@ void main() {
     });
   });
 
-  group('unrecognized lines', () {
-    test('complex circuit line goes to unrecognized', () {
-      final line = 'sentadillas 3 + 3 saltos C/caída del cajón + 5 saltos';
-      final result = parser.parse(line);
-      expect(result.exercises, isEmpty);
-      expect(result.unrecognized.length, 1);
-      expect(result.unrecognized.first.original, line);
+  group('compound / circuit pattern', () {
+    test('simple "Biceps Martillo 6 + 6 biceps comun c/ mancuerna"', () {
+      final result =
+          parser.parse('Biceps Martillo 6 + 6 biceps comun c/ mancuerna');
+      expect(result.exercises.length, 1);
+      expect(result.unrecognized, isEmpty);
+      expect(result.exercises.first.sets.length, 1);
+      expect(result.exercises.first.sets.first.reps, 12);
+      expect(result.exercises.first.restSeconds, isNull);
     });
 
+    test('compound name joins components with "+"', () {
+      final result = parser.parse('Biceps Martillo 6 + 6 biceps comun');
+      expect(result.exercises.first.name, 'Biceps Martillo + biceps comun');
+    });
+
+    test('circuit with rounds and rest time', () {
+      const line =
+          'Sentadillas 3 + 3 Saltos c/caida del cajon + 5 saltos con mancuernas'
+          ' + 8 saltos asistidos c/banda'
+          ' (hacer 3 vueltas de este circuito c/2 min de pausa entre vueltas)';
+      final result = parser.parse(line);
+      expect(result.exercises.length, 1);
+      expect(result.exercises.first.sets.length, 3); // 3 vueltas
+      expect(result.exercises.first.sets.first.reps, 19); // 3+3+5+8
+      expect(result.exercises.first.restSeconds, 120); // 2 min
+    });
+
+    test('no rounds specified defaults to 1 set', () {
+      final result =
+          parser.parse('sentadillas 3 + 3 saltos C/caída del cajón + 5 saltos');
+      expect(result.exercises.first.sets.length, 1);
+      expect(result.exercises.first.sets.first.reps, 11); // 3+3+5
+    });
+  });
+
+  group('unrecognized lines', () {
     test('empty lines are skipped', () {
       final result = parser.parse('\n\n');
       expect(result.exercises, isEmpty);
       expect(result.unrecognized, isEmpty);
+    });
+
+    test('line with no pattern goes to unrecognized', () {
+      final result = parser.parse('esto no tiene patron reconocido');
+      expect(result.exercises, isEmpty);
+      expect(result.unrecognized.length, 1);
     });
 
     test('section headers like "Femorales camilla 12.12.10.10" before empty line', () {

@@ -20,6 +20,18 @@ class RoutineParser {
     caseSensitive: false,
   );
 
+  // Trigger: digit adjacent to "+" — "6 + 6", "3 + 3", etc.
+  static final _compoundTrigger = RegExp(r'\d\s*\+\s*\d');
+
+  // Parenthesised metadata: "(hacer 3 vueltas c/2 min de pausa)"
+  static final _parenRe = RegExp(r'\(([^)]+)\)');
+  static final _restMinRe = RegExp(r'c/\s*(\d+)\s*min', caseSensitive: false);
+  static final _roundsRe = RegExp(r'(\d+)\s*vuelta', caseSensitive: false);
+
+  // Component parsers: "3 Saltos c/caida" vs "Sentadillas 3"
+  static final _numFirstRe = RegExp(r'^(\d+)\s+(.+)$');
+  static final _namFirstRe = RegExp(r'^(.+?)\s+(\d+)$');
+
   ParseResult parse(String text) {
     final exercises = <ParsedExercise>[];
     final unrecognized = <UnrecognizedLine>[];
@@ -93,6 +105,56 @@ class RoutineParser {
       );
     }
 
+    // Compound / circuit pattern: "6 + 6 ...", "3 + 3 + 5 ... (3 vueltas c/2 min)"
+    if (_compoundTrigger.hasMatch(line)) {
+      return _parseCompound(line);
+    }
+
     return null;
+  }
+
+  ParsedExercise _parseCompound(String line) {
+    int? restSeconds;
+    int rounds = 1;
+
+    // Extract paren block for rounds and rest metadata
+    final parenMatch = _parenRe.firstMatch(line);
+    if (parenMatch != null) {
+      final paren = parenMatch.group(1)!;
+      final roundsMatch = _roundsRe.firstMatch(paren);
+      if (roundsMatch != null) rounds = int.parse(roundsMatch.group(1)!);
+      final restMatch = _restMinRe.firstMatch(paren);
+      if (restMatch != null) restSeconds = int.parse(restMatch.group(1)!) * 60;
+      line = line.replaceAll(_parenRe, '').trim();
+    }
+
+    final parts = line.split(RegExp(r'\s*\+\s*'));
+    int totalReps = 0;
+    final names = <String>[];
+
+    for (final part in parts) {
+      final p = part.trim();
+      if (p.isEmpty) continue;
+      final numFirst = _numFirstRe.firstMatch(p);
+      final namFirst = _namFirstRe.firstMatch(p);
+      if (numFirst != null) {
+        totalReps += int.parse(numFirst.group(1)!);
+        names.add(numFirst.group(2)!.trim());
+      } else if (namFirst != null) {
+        names.add(namFirst.group(1)!.trim());
+        totalReps += int.parse(namFirst.group(2)!);
+      } else {
+        names.add(p);
+      }
+    }
+
+    return ParsedExercise(
+      name: names.join(' + '),
+      sets: List.generate(
+        rounds,
+        (_) => ParsedSet(reps: totalReps > 0 ? totalReps : null),
+      ),
+      restSeconds: restSeconds,
+    );
   }
 }

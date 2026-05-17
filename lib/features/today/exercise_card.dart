@@ -7,6 +7,13 @@ import '../../providers.dart';
 import 'providers.dart';
 import 'set_row.dart';
 
+String _formatRest(int seconds) {
+  final m = seconds ~/ 60;
+  final s = seconds % 60;
+  if (m == 0) return '${s}s descanso';
+  return s == 0 ? '${m}min descanso' : '${m}m ${s}s descanso';
+}
+
 class ExerciseCard extends ConsumerWidget {
   final Exercise exercise;
 
@@ -71,6 +78,14 @@ class ExerciseCard extends ConsumerWidget {
               ],
             ),
           ),
+          if (exercise.restSeconds != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+              child: Text(
+                '⏱ ${_formatRest(exercise.restSeconds!)}',
+                style: TextStyle(color: Colors.orange[300], fontSize: 11),
+              ),
+            ),
           if (sets != null)
             Column(children: sets.map((s) => SetRow(set: s)).toList())
           else if (setsAsync.isLoading)

@@ -17,8 +17,9 @@ class ParsedSet {
 class ParsedExercise {
   final String name;
   final List<ParsedSet> sets;
+  final int? restSeconds;
 
-  const ParsedExercise({required this.name, required this.sets});
+  const ParsedExercise({required this.name, required this.sets, this.restSeconds});
 }
 
 class UnrecognizedLine {
