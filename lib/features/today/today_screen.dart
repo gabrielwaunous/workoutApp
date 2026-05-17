@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' show Value;
-import '../../core/database/tables.dart';
+import '../../core/database/app_database.dart';
 import '../../providers.dart';
 import 'exercise_card.dart';
 import 'providers.dart';
@@ -17,15 +17,15 @@ class TodayScreen extends ConsumerWidget {
     return sessionAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => Center(child: Text('Error: $e')),
-      data: (session) => _TodayContent(session: session),
+      data: (session) => TodayContent(session: session),
     );
   }
 }
 
-class _TodayContent extends ConsumerWidget {
+class TodayContent extends ConsumerWidget {
   final WorkoutSession session;
 
-  const _TodayContent({required this.session});
+  const TodayContent({required this.session, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

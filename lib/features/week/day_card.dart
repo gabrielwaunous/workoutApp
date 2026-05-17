@@ -1,7 +1,8 @@
 // lib/features/week/day_card.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/database/tables.dart';
+import '../../core/database/app_database.dart';
+import 'day_detail_screen.dart';
 import 'providers.dart';
 
 class DayCard extends ConsumerWidget {
@@ -27,6 +28,11 @@ class DayCard extends ConsumerWidget {
         subtitle: session != null
             ? _VolumeText(sessionId: session!.id)
             : const Text('Sin entrenamiento', style: TextStyle(color: Colors.grey)),
+        trailing: const Icon(Icons.chevron_right, size: 18, color: Colors.grey),
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => DayDetailScreen(date: date)),
+        ),
       ),
     );
   }
