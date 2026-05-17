@@ -3,9 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' show Value;
 import '../../core/database/app_database.dart';
+import '../../core/muscle_group_detector.dart';
 import '../../providers.dart';
 import 'exercise_card.dart';
 import 'providers.dart';
+
+sealed class _ListItem {}
+
+class _HeaderItem extends _ListItem {
+  final String label;
+  _HeaderItem(this.label);
+}
+
+class _ExerciseItem extends _ListItem {
+  final Exercise exercise;
+  _ExerciseItem(this.exercise);
+}
+
+List<_ListItem> _buildItems(List<Exercise> exercises) {
+  final items = <_ListItem>[];
+  String? last;
+  for (final ex in exercises) {
+    final g = ex.muscleGroup ?? 'General';
+    if (g != last) {
+      items.add(_HeaderItem(g));
+      last = g;
+    }
+    items.add(_ExerciseItem(ex));
+  }
+  return items;
+}
 
 class TodayScreen extends ConsumerWidget {
   const TodayScreen({super.key});
@@ -57,12 +84,20 @@ class TodayContent extends ConsumerWidget {
           ),
         ),
         exercisesAsync.when(
-          data: (exercises) => SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (_, i) => ExerciseCard(exercise: exercises[i]),
-              childCount: exercises.length,
-            ),
-          ),
+          data: (exercises) {
+            final items = _buildItems(exercises);
+            return SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (_, i) => switch (items[i]) {
+                  _HeaderItem(:final label) =>
+                    _MuscleGroupHeader(label: label),
+                  _ExerciseItem(:final exercise) =>
+                    ExerciseCard(exercise: exercise),
+                },
+                childCount: items.length,
+              ),
+            );
+          },
           loading: () => const SliverToBoxAdapter(
             child: Center(child: CircularProgressIndicator()),
           ),
@@ -85,7 +120,10 @@ class TodayContent extends ConsumerWidget {
 
   String _formatDate(DateTime d) {
     const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-    const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const months = [
+      'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+      'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+    ];
     return '${days[d.weekday - 1]} ${d.day} ${months[d.month - 1]}';
   }
 
@@ -116,11 +154,44 @@ class TodayContent extends ConsumerWidget {
                   sessionId: Value(sessionId),
                   name: Value(name),
                   orderIndex: Value(count),
+                  muscleGroup: Value(MuscleGroupDetector.detect(name)),
                 ),
               );
               if (ctx.mounted) Navigator.pop(ctx);
             },
             child: const Text('Agregar'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MuscleGroupHeader extends StatelessWidget {
+  final String label;
+  const _MuscleGroupHeader({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+      child: Row(
+        children: [
+          Text(
+            label.toUpperCase(),
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 1.2,
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Divider(
+              thickness: 0.5,
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+            ),
           ),
         ],
       ),

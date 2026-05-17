@@ -142,6 +142,7 @@ class _RoutineTile extends ConsumerWidget {
             name: Value(ex.name),
             orderIndex: Value(order++),
             restSeconds: Value(ex.restSeconds),
+            muscleGroup: Value(ex.muscleGroup),
           ),
         );
         for (int i = 0; i < ex.sets.length; i++) {
