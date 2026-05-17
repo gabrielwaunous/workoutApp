@@ -179,6 +179,23 @@ void main() {
     });
   });
 
+  group('muscle group detection', () {
+    test('press plano 4x8 detects Pecho', () {
+      final result = parser.parse('press plano 4x8');
+      expect(result.exercises.first.muscleGroup, 'Pecho');
+    });
+
+    test('sentadillas 3x12 detects Piernas', () {
+      final result = parser.parse('sentadillas 3x12');
+      expect(result.exercises.first.muscleGroup, 'Piernas');
+    });
+
+    test('unknown exercise has null muscleGroup', () {
+      final result = parser.parse('zumba 3x20');
+      expect(result.exercises.first.muscleGroup, isNull);
+    });
+  });
+
   group('multi-line input', () {
     test('parses full routine from Brainstorming examples', () {
       const input = '''
