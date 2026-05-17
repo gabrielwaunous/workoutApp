@@ -106,6 +106,18 @@ void main() {
       expect(result.exercises.first.sets.length, 1);
       expect(result.exercises.first.sets.first.reps, 11); // 3+3+5
     });
+
+    test('words between digit and + — "4 sentadillas + 4 saltos en altura"', () {
+      final result =
+          parser.parse('4 sentadillas + 4 saltos en altura en contramovimiento');
+      expect(result.exercises.length, 1);
+      expect(result.unrecognized, isEmpty);
+      expect(result.exercises.first.sets.first.reps, 8); // 4+4
+      expect(
+        result.exercises.first.name,
+        'sentadillas + saltos en altura en contramovimiento',
+      );
+    });
   });
 
   group('unrecognized lines', () {

@@ -7,6 +7,7 @@ import '../../core/parser/routine_parser.dart';
 import '../../providers.dart';
 import 'providers.dart';
 import 'paste_routine_screen.dart';
+import 'routine_edit_screen.dart';
 
 final _parserProvider = Provider((_) => RoutineParser());
 
@@ -56,6 +57,12 @@ class _RoutineTile extends ConsumerWidget {
     return ListTile(
       title: Text(routine.name),
       subtitle: Text(_exerciseCount(routine.rawText)),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => RoutineEditScreen(routine: routine),
+        ),
+      ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

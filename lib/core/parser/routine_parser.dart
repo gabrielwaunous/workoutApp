@@ -20,8 +20,8 @@ class RoutineParser {
     caseSensitive: false,
   );
 
-  // Trigger: digit adjacent to "+" — "6 + 6", "3 + 3", etc.
-  static final _compoundTrigger = RegExp(r'\d\s*\+\s*\d');
+  // Trigger: "+" surrounded by spaces — "4 sentadillas + 4 saltos", "6 + 6", etc.
+  static final _compoundTrigger = RegExp(r'\s\+\s');
 
   // Parenthesised metadata: "(hacer 3 vueltas c/2 min de pausa)"
   static final _parenRe = RegExp(r'\(([^)]+)\)');

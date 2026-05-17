@@ -14,6 +14,10 @@ class RoutinesDao extends DatabaseAccessor<AppDatabase> with _$RoutinesDaoMixin 
   Future<int> insertRoutine(RoutinesCompanion routine) =>
       into(routines).insert(routine);
 
+  Future<void> updateRoutine(int id, {required String name, required String rawText}) =>
+      (update(routines)..where((t) => t.id.equals(id)))
+          .write(RoutinesCompanion(name: Value(name), rawText: Value(rawText)));
+
   Future<void> deleteRoutine(int id) =>
       (delete(routines)..where((t) => t.id.equals(id))).go();
 }
