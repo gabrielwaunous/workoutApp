@@ -1,10 +1,11 @@
 // lib/core/parser/routine_parser.dart
 import 'parsed_models.dart';
+import '../muscle_group_detector.dart';
 
 class RoutineParser {
   // Strip leading WhatsApp bullet chars (* bullet) and invisible Unicode
   // chars like U+2060 (word joiner) that WhatsApp prepends to list items.
-  static final _bulletRe = RegExp(r'^[\s*•⁠﻿ ]+');
+  static final _bulletRe = RegExp(r'^[\s*•⁠﻿ ]+');
 
   // "4x8" or "3X16" — NxM anywhere in line (partial match, allows trailing text)
   static final _nxmRe = RegExp(
@@ -75,9 +76,9 @@ class RoutineParser {
     if (failMatch != null) {
       final name = failMatch.group(1)!.trim();
       final count = int.parse(failMatch.group(2)!);
-      return ParsedExercise(
-        name: name,
-        sets: List.generate(
+      return _build(
+        name,
+        List.generate(
           count,
           (i) => ParsedSet(
             toFailure: true,
@@ -96,9 +97,9 @@ class RoutineParser {
       final weight = nxmMatch.group(4) != null
           ? double.tryParse(nxmMatch.group(4)!)
           : null;
-      return ParsedExercise(
-        name: name,
-        sets: List.generate(
+      return _build(
+        name,
+        List.generate(
           n,
           (i) => ParsedSet(
             reps: m,
@@ -114,10 +115,7 @@ class RoutineParser {
     if (dotMatch != null) {
       final name = dotMatch.group(1)!.trim();
       final repsList = dotMatch.group(2)!.split('.').map(int.parse).toList();
-      return ParsedExercise(
-        name: name,
-        sets: repsList.map((r) => ParsedSet(reps: r)).toList(),
-      );
+      return _build(name, repsList.map((r) => ParsedSet(reps: r)).toList());
     }
 
     // "N qualifier y N qualifier" compound
@@ -125,10 +123,7 @@ class RoutineParser {
     if (yMatch != null) {
       final name = yMatch.group(1)!.trim();
       final reps = int.parse(yMatch.group(2)!) + int.parse(yMatch.group(3)!);
-      return ParsedExercise(
-        name: name,
-        sets: [ParsedSet(reps: reps)],
-      );
+      return _build(name, [ParsedSet(reps: reps)]);
     }
 
     // "+" compound / circuit
@@ -173,13 +168,22 @@ class RoutineParser {
       }
     }
 
-    return ParsedExercise(
-      name: names.join(' + '),
-      sets: List.generate(
+    return _build(
+      names.join(' + '),
+      List.generate(
         rounds,
         (_) => ParsedSet(reps: totalReps > 0 ? totalReps : null),
       ),
       restSeconds: restSeconds,
     );
   }
+
+  ParsedExercise _build(String name, List<ParsedSet> sets,
+          {int? restSeconds}) =>
+      ParsedExercise(
+        name: name,
+        sets: sets,
+        restSeconds: restSeconds,
+        muscleGroup: MuscleGroupDetector.detect(name),
+      );
 }

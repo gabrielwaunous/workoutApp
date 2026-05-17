@@ -18,8 +18,14 @@ class ParsedExercise {
   final String name;
   final List<ParsedSet> sets;
   final int? restSeconds;
+  final String? muscleGroup;
 
-  const ParsedExercise({required this.name, required this.sets, this.restSeconds});
+  const ParsedExercise({
+    required this.name,
+    required this.sets,
+    this.restSeconds,
+    this.muscleGroup,
+  });
 }
 
 class UnrecognizedLine {

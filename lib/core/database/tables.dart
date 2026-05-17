@@ -20,6 +20,7 @@ class Exercises extends Table {
   TextColumn get name => text()();
   IntColumn get orderIndex => integer()();
   IntColumn get restSeconds => integer().nullable()();
+  TextColumn get muscleGroup => text().nullable()();
 }
 
 @DataClassName('WorkoutSet')
