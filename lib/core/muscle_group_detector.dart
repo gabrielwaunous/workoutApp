@@ -21,10 +21,14 @@ class MuscleGroupDetector {
       'pajaros', 'pajaro', 'manguito rotador', 'rotaciones', 'deltoides', 'hombros',
     ],
     'Piernas': [
-      'hip thrust', 'peso bulgaro', 'sentadilla bulgara',
+      'hip thrust', 'hip trust',
+      'elevacion de pelvis', 'puente de gluteo', 'puente gluteo',
+      'peso bulgaro', 'sentadilla bulgara',
       'extensiones de cuadriceps', 'extensiones cuadriceps',
       'femoral camilla', 'femorales camilla', 'femorales con swiss ball',
       'femorales swiss ball', 'curl femoral', 'prensa inclinada', 'prensa 45',
+      'saltos asistidos', 'saltos en altura', 'saltos pliometricos',
+      'saltos con caida', 'saltos c/caida', 'salto con cajon', 'box jump',
       'sentadillas', 'sentadilla', 'estocadas', 'zancadas', 'lunge', 'lunges',
       'prensa', 'femoral', 'isquiotibial', 'gemelos', 'soleo', 'pantorrillas',
       'abductores', 'aductores', 'gluteo', 'gluteos', 'cuadriceps',
@@ -47,8 +51,7 @@ class MuscleGroupDetector {
     ],
     'Cardio': [
       'saltos con cuerda', 'caminata en cinta', 'bicicleta estatica',
-      'caminata', 'correr', 'bicicleta', 'eliptica', 'saltos', 'cuerda',
-      'burpees', 'sprints',
+      'caminata', 'correr', 'bicicleta', 'eliptica', 'burpees', 'sprints',
     ],
   };
 

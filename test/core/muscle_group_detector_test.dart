@@ -27,6 +27,22 @@ void main() {
       expect(MuscleGroupDetector.detect('tríceps paralelas'), 'Triceps');
     });
 
+    test('hip trust (misspelling) → Piernas', () {
+      expect(MuscleGroupDetector.detect('hip trust'), 'Piernas');
+    });
+
+    test('elevación de pelvis → Piernas', () {
+      expect(MuscleGroupDetector.detect('elevación de pelvis'), 'Piernas');
+    });
+
+    test('saltos asistidos → Piernas (not Cardio)', () {
+      expect(MuscleGroupDetector.detect('saltos asistidos c/banda'), 'Piernas');
+    });
+
+    test('saltos con cuerda → Cardio', () {
+      expect(MuscleGroupDetector.detect('saltos con cuerda'), 'Cardio');
+    });
+
     test('unknown exercise → null', () {
       expect(MuscleGroupDetector.detect('zumba'), isNull);
     });
