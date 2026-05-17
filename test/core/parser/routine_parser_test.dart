@@ -115,6 +115,13 @@ void main() {
       expect(result.exercises.first.sets.first.reps, 11); // 3+3+5
     });
 
+    test('no spaces around + — "bíceps con mancuerna 8+8 bíceps martillo"', () {
+      final result = parser.parse('bíceps con mancuerna 8+8 bíceps martillo');
+      expect(result.exercises.length, 1);
+      expect(result.unrecognized, isEmpty);
+      expect(result.exercises.first.sets.first.reps, 16);
+    });
+
     test('words between digit and + — "4 sentadillas + 4 saltos en altura"', () {
       final result =
           parser.parse('4 sentadillas + 4 saltos en altura en contramovimiento');

@@ -31,8 +31,9 @@ class RoutineParser {
     caseSensitive: false,
   );
 
-  // "+" surrounded by spaces — "4 sentadillas + 4 saltos", "6 + 6", circuits
-  static final _compoundTrigger = RegExp(r'\s\+\s');
+  // "+" between compound parts — "6 + 6", "8+8", "sentadillas + saltos"
+  // Matches: digit±space+±space digit  OR  space+space (exercise names without nums)
+  static final _compoundTrigger = RegExp(r'(?:\d\s*\+\s*\d|\s\+\s)');
 
   // Parenthesised metadata: "(hacer 3 vueltas c/2 min de pausa)"
   static final _parenRe = RegExp(r'\(([^)]+)\)');

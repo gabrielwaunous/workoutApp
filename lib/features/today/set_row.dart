@@ -37,19 +37,21 @@ class SetRow extends ConsumerWidget {
                   : Center(
                       child: Text(
                         '${set.setNumber}',
-                        style: const TextStyle(
-                            color: Colors.grey, fontSize: 11),
+                        style: const TextStyle(color: Colors.grey, fontSize: 11),
                       ),
                     ),
             ),
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: _chip(
-              set.toFailure ? 'fallo' : '${set.reps} reps',
-              done ? Colors.green[900]! : Colors.grey[850]!,
-              done ? Colors.green[200]! : Colors.white70,
-              strikethrough: done,
+            child: GestureDetector(
+              onTap: () => _repsDialog(context, ref),
+              child: _chip(
+                set.toFailure ? 'fallo' : '${set.reps ?? '?'} reps',
+                done ? Colors.green[900]! : Colors.grey[850]!,
+                done ? Colors.green[200]! : Colors.white70,
+                strikethrough: done,
+              ),
             ),
           ),
           const SizedBox(width: 8),
@@ -92,6 +94,62 @@ class SetRow extends ConsumerWidget {
           ),
         ),
       );
+
+  void _repsDialog(BuildContext context, WidgetRef ref) {
+    final repsCtrl = TextEditingController(
+      text: set.reps != null ? '${set.reps}' : '',
+    );
+    bool toFailure = set.toFailure;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setState) => AlertDialog(
+          title: Text('Set ${set.setNumber} — Reps'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: repsCtrl,
+                enabled: !toFailure,
+                keyboardType: TextInputType.number,
+                autofocus: !toFailure,
+                decoration: const InputDecoration(hintText: 'ej: 10'),
+              ),
+              Row(
+                children: [
+                  Checkbox(
+                    value: toFailure,
+                    onChanged: (v) => setState(() => toFailure = v ?? false),
+                  ),
+                  const Text('Al fallo'),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                final reps = toFailure
+                    ? null
+                    : int.tryParse(repsCtrl.text.trim());
+                ref
+                    .read(databaseProvider)
+                    .setsDao
+                    .updateReps(set.id, reps, toFailure);
+                Navigator.pop(ctx);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   void _weightDialog(BuildContext context, WidgetRef ref) {
     final controller = TextEditingController(

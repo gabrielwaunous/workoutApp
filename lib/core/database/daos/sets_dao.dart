@@ -27,6 +27,10 @@ class SetsDao extends DatabaseAccessor<AppDatabase> with _$SetsDaoMixin {
       (update(sets)..where((t) => t.id.equals(setId)))
           .write(SetsCompanion(weight: Value(weight)));
 
+  Future<void> updateReps(int setId, int? reps, bool toFailure) =>
+      (update(sets)..where((t) => t.id.equals(setId)))
+          .write(SetsCompanion(reps: Value(reps), toFailure: Value(toFailure)));
+
   // Returns all sets belonging to exercises in a session (for volume calc)
   Future<List<WorkoutSet>> getBySession(int sessionId) async {
     final query = select(sets).join([
