@@ -5,10 +5,17 @@ import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'tables.dart';
+import 'daos/routines_dao.dart';
+import 'daos/sessions_dao.dart';
+import 'daos/exercises_dao.dart';
+import 'daos/sets_dao.dart';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [Routines, WorkoutSessions, Exercises, Sets])
+@DriftDatabase(
+  tables: [Routines, WorkoutSessions, Exercises, Sets],
+  daos: [RoutinesDao, SessionsDao, ExercisesDao, SetsDao],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
   AppDatabase.forTesting(QueryExecutor e) : super(e);
