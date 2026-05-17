@@ -2,6 +2,10 @@
 import 'parsed_models.dart';
 
 class RoutineParser {
+  // Strip leading WhatsApp bullet chars (* bullet) and invisible Unicode
+  // chars like U+2060 (word joiner) that WhatsApp prepends to list items.
+  static final _bulletRe = RegExp(r'^[\s*•⁠﻿ ]+');
+
   // "4x8" or "3X16" — NxM anywhere in line (partial match, allows trailing text)
   static final _nxmRe = RegExp(
     r'^(.+?)\s+(\d+)[xX](\d+)(?:\s+(\d+\.?\d*)\s*kg)?',
@@ -14,13 +18,20 @@ class RoutineParser {
     caseSensitive: false,
   );
 
-  // "4xfallo" or "4Xfallo"
+  // "4xfallo" or "4 x fallo" — spaces around x are optional
   static final _failureRe = RegExp(
-    r'^(.+?)\s+(\d+)[xX]fallo',
+    r'^(.+?)\s+(\d+)\s*[xX]\s*fallo',
     caseSensitive: false,
   );
 
-  // Trigger: "+" surrounded by spaces — "4 sentadillas + 4 saltos", "6 + 6", etc.
+  // "N [qualifier] y N [qualifier]"
+  // e.g. "bíceps c mancuernas 8 comunes y 8 martillo en simultáneo"
+  static final _yCompoundRe = RegExp(
+    r'^(.+?)\s+(\d+)\s+\w[\w\s]*?y\s+(\d+)(?:\s+(.+))?$',
+    caseSensitive: false,
+  );
+
+  // "+" surrounded by spaces — "4 sentadillas + 4 saltos", "6 + 6", circuits
   static final _compoundTrigger = RegExp(r'\s\+\s');
 
   // Parenthesised metadata: "(hacer 3 vueltas c/2 min de pausa)"
@@ -28,16 +39,19 @@ class RoutineParser {
   static final _restMinRe = RegExp(r'c/\s*(\d+)\s*min', caseSensitive: false);
   static final _roundsRe = RegExp(r'(\d+)\s*vuelta', caseSensitive: false);
 
-  // Component parsers: "3 Saltos c/caida" vs "Sentadillas 3"
+  // Component parsers for compound: "3 Saltos c/caida" vs "Sentadillas 3"
   static final _numFirstRe = RegExp(r'^(\d+)\s+(.+)$');
   static final _namFirstRe = RegExp(r'^(.+?)\s+(\d+)$');
+
+  static String _cleanLine(String line) =>
+      line.replaceFirst(_bulletRe, '').trim();
 
   ParseResult parse(String text) {
     final exercises = <ParsedExercise>[];
     final unrecognized = <UnrecognizedLine>[];
 
     for (final raw in text.split('\n')) {
-      final line = raw.trim();
+      final line = _cleanLine(raw);
       if (line.isEmpty) continue;
 
       final exercise = _tryParse(line);
@@ -55,7 +69,7 @@ class RoutineParser {
     final upper = line.toUpperCase();
     final hasSp = upper.contains(' SP');
 
-    // Failure pattern first (before NxM, since "xfallo" would also loosely match NxM)
+    // Failure first — "4xfallo" or "4 x fallo"
     final failMatch = _failureRe.firstMatch(line);
     if (failMatch != null) {
       final name = failMatch.group(1)!.trim();
@@ -105,7 +119,18 @@ class RoutineParser {
       );
     }
 
-    // Compound / circuit pattern: "6 + 6 ...", "3 + 3 + 5 ... (3 vueltas c/2 min)"
+    // "N qualifier y N qualifier" compound
+    final yMatch = _yCompoundRe.firstMatch(line);
+    if (yMatch != null) {
+      final name = yMatch.group(1)!.trim();
+      final reps = int.parse(yMatch.group(2)!) + int.parse(yMatch.group(3)!);
+      return ParsedExercise(
+        name: name,
+        sets: [ParsedSet(reps: reps)],
+      );
+    }
+
+    // "+" compound / circuit
     if (_compoundTrigger.hasMatch(line)) {
       return _parseCompound(line);
     }
@@ -117,7 +142,6 @@ class RoutineParser {
     int? restSeconds;
     int rounds = 1;
 
-    // Extract paren block for rounds and rest metadata
     final parenMatch = _parenRe.firstMatch(line);
     if (parenMatch != null) {
       final paren = parenMatch.group(1)!;

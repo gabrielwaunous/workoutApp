@@ -1,4 +1,5 @@
 // lib/features/today/exercise_card.dart
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/database/app_database.dart';
@@ -18,6 +19,19 @@ class ExerciseCard extends ConsumerWidget {
   final Exercise exercise;
 
   const ExerciseCard({required this.exercise, super.key});
+
+  Future<void> _showAddSetDialog(
+      BuildContext context, WidgetRef ref, int currentCount) async {
+    final result = await showDialog<SetsCompanion>(
+      context: context,
+      builder: (_) => _AddSetDialog(
+        exerciseId: exercise.id,
+        setNumber: currentCount + 1,
+      ),
+    );
+    if (result == null) return;
+    await ref.read(databaseProvider).setsDao.insertSet(result);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -98,9 +112,111 @@ class ExerciseCard extends ConsumerWidget {
               padding: const EdgeInsets.all(12),
               child: Text('Error: ${setsAsync.error}'),
             ),
-          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+            child: TextButton.icon(
+              icon: const Icon(Icons.add, size: 16),
+              label: const Text('Serie'),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                visualDensity: VisualDensity.compact,
+              ),
+              onPressed: () => _showAddSetDialog(context, ref, sets?.length ?? 0),
+            ),
+          ),
         ],
       ),
+    );
+  }
+}
+
+class _AddSetDialog extends StatefulWidget {
+  final int exerciseId;
+  final int setNumber;
+
+  const _AddSetDialog({required this.exerciseId, required this.setNumber});
+
+  @override
+  State<_AddSetDialog> createState() => _AddSetDialogState();
+}
+
+class _AddSetDialogState extends State<_AddSetDialog> {
+  final _repsCtrl = TextEditingController();
+  final _weightCtrl = TextEditingController();
+  bool _toFailure = false;
+
+  @override
+  void dispose() {
+    _repsCtrl.dispose();
+    _weightCtrl.dispose();
+    super.dispose();
+  }
+
+  void _confirm() {
+    final reps = int.tryParse(_repsCtrl.text.trim());
+    final weight = double.tryParse(_weightCtrl.text.trim());
+    Navigator.pop(
+      context,
+      SetsCompanion(
+        exerciseId: Value(widget.exerciseId),
+        setNumber: Value(widget.setNumber),
+        reps: Value(_toFailure ? null : reps),
+        weight: Value(weight),
+        toFailure: Value(_toFailure),
+        isPartial: const Value(false),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Serie ${widget.setNumber}'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _repsCtrl,
+                  enabled: !_toFailure,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(labelText: 'Reps'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: TextField(
+                  controller: _weightCtrl,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(labelText: 'Peso (kg)'),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Checkbox(
+                value: _toFailure,
+                onChanged: (v) => setState(() => _toFailure = v ?? false),
+              ),
+              const Text('Al fallo'),
+            ],
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancelar'),
+        ),
+        TextButton(
+          onPressed: _confirm,
+          child: const Text('Agregar'),
+        ),
+      ],
     );
   }
 }

@@ -1,7 +1,7 @@
 // lib/features/today/set_row.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/database/tables.dart';
+import '../../core/database/app_database.dart';
 import '../../providers.dart';
 
 class SetRow extends ConsumerWidget {

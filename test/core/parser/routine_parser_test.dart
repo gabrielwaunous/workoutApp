@@ -70,6 +70,14 @@ void main() {
       final s = result.exercises.first.sets;
       expect(s.last.isPartial, isTrue);
     });
+
+    test('parses "4 x fallo" with spaces around x', () {
+      final result = parser.parse('tríceps paralelas 4 x fallo');
+      expect(result.exercises.length, 1);
+      expect(result.unrecognized, isEmpty);
+      expect(result.exercises.first.sets.length, 4);
+      expect(result.exercises.first.sets.first.toFailure, isTrue);
+    });
   });
 
   group('compound / circuit pattern', () {
@@ -117,6 +125,30 @@ void main() {
         result.exercises.first.name,
         'sentadillas + saltos en altura en contramovimiento',
       );
+    });
+  });
+
+  group('bullet stripping', () {
+    test('strips leading asterisk + space (WhatsApp bullet)', () {
+      final result = parser.parse('* press plano 4x8');
+      expect(result.exercises.length, 1);
+      expect(result.exercises.first.name, 'press plano');
+    });
+
+    test('strips leading bullet char •', () {
+      final result = parser.parse('• sentadillas 3x10');
+      expect(result.exercises.length, 1);
+      expect(result.exercises.first.name, 'sentadillas');
+    });
+  });
+
+  group('y compound pattern', () {
+    test('parses "bíceps c mancuernas 8 comunes y 8 martillo en simultáneo"', () {
+      final result =
+          parser.parse('bíceps c mancuernas 8 comunes y 8 martillo en simultáneo');
+      expect(result.exercises.length, 1);
+      expect(result.unrecognized, isEmpty);
+      expect(result.exercises.first.sets.first.reps, 16); // 8 + 8
     });
   });
 

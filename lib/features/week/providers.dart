@@ -1,6 +1,6 @@
 // lib/features/week/providers.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/database/tables.dart';
+import '../../core/database/app_database.dart';
 import '../../core/volume.dart';
 import '../../providers.dart';
 
