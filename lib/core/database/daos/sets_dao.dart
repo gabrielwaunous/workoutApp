@@ -44,4 +44,7 @@ class SetsDao extends DatabaseAccessor<AppDatabase> with _$SetsDaoMixin {
         .watch()
         .map((rows) => rows.map((r) => r.readTable(sets)).toList());
   }
+
+  Future<void> deleteByExercise(int exerciseId) =>
+      (delete(sets)..where((t) => t.exerciseId.equals(exerciseId))).go();
 }

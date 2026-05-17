@@ -41,4 +41,11 @@ class SessionsDao extends DatabaseAccessor<AppDatabase>
               t.date.isSmallerThanValue(end)))
         .get();
   }
+
+  Future<WorkoutSession> getOrCreateForDate(DateTime date) async {
+    final existing = await getByDate(date);
+    if (existing != null) return existing;
+    await insertSession(WorkoutSessionsCompanion(date: Value(date)));
+    return (await getByDate(date))!;
+  }
 }

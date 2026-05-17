@@ -1,18 +1,17 @@
-import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/database/tables.dart';
+import '../../core/database/app_database.dart';
 import '../../core/volume.dart';
 import '../../providers.dart';
 
 final todaySessionProvider = FutureProvider<WorkoutSession>((ref) async {
   final db = ref.watch(databaseProvider);
-  final today = DateTime.now();
-  final existing = await db.sessionsDao.getByDate(today);
-  if (existing != null) return existing;
-  await db.sessionsDao.insertSession(
-    WorkoutSessionsCompanion(date: Value(today)),
-  );
-  return (await db.sessionsDao.getByDate(today))!;
+  return db.sessionsDao.getOrCreateForDate(DateTime.now());
+});
+
+final sessionForDateProvider =
+    FutureProvider.family<WorkoutSession, DateTime>((ref, date) async {
+  final db = ref.watch(databaseProvider);
+  return db.sessionsDao.getOrCreateForDate(date);
 });
 
 final exercisesBySessionProvider =

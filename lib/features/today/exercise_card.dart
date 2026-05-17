@@ -1,8 +1,9 @@
 // lib/features/today/exercise_card.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/database/tables.dart';
+import '../../core/database/app_database.dart';
 import '../../core/volume.dart';
+import '../../providers.dart';
 import 'providers.dart';
 import 'set_row.dart';
 
@@ -26,15 +27,47 @@ class ExerciseCard extends ConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  exercise.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                Expanded(
+                  child: Text(
+                    exercise.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  ),
                 ),
                 if (sets != null)
                   Text(
                     '${calculateExerciseVolume(sets).toStringAsFixed(0)} vol',
                     style: const TextStyle(color: Colors.blue, fontSize: 12),
                   ),
+                IconButton(
+                  icon: const Icon(Icons.delete_outline, size: 18),
+                  color: Colors.red[300],
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: () async {
+                    final confirmed = await showDialog<bool>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('Eliminar ejercicio'),
+                        content: Text('¿Eliminar "${exercise.name}"?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, false),
+                            child: const Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, true),
+                            child: const Text('Eliminar'),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirmed == true) {
+                      final db = ref.read(databaseProvider);
+                      await db.setsDao.deleteByExercise(exercise.id);
+                      await db.exercisesDao.deleteExercise(exercise.id);
+                    }
+                  },
+                ),
               ],
             ),
           ),

@@ -2,10 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' show Value;
-import '../../core/database/tables.dart';
+import '../../core/database/app_database.dart';
 import '../../core/parser/routine_parser.dart';
 import '../../providers.dart';
-import '../today/providers.dart';
 import 'providers.dart';
 import 'paste_routine_screen.dart';
 
@@ -57,9 +56,24 @@ class _RoutineTile extends ConsumerWidget {
     return ListTile(
       title: Text(routine.name),
       subtitle: Text(_exerciseCount(routine.rawText)),
-      trailing: TextButton(
-        onPressed: () => _loadToday(context, ref),
-        child: const Text('Usar hoy'),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextButton(
+            onPressed: () => _loadForDate(context, ref, DateTime.now()),
+            child: const Text('Hoy'),
+          ),
+          IconButton(
+            icon: const Icon(Icons.calendar_today, size: 18),
+            tooltip: 'Elegir fecha',
+            onPressed: () => _pickDateAndLoad(context, ref),
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete_outline, size: 18),
+            color: Colors.red[300],
+            onPressed: () => _confirmDelete(context, ref),
+          ),
+        ],
       ),
     );
   }
@@ -69,9 +83,46 @@ class _RoutineTile extends ConsumerWidget {
     return '$lines líneas';
   }
 
-  Future<void> _loadToday(BuildContext context, WidgetRef ref) async {
+  Future<void> _pickDateAndLoad(BuildContext context, WidgetRef ref) async {
+    final now = DateTime.now();
+    final date = await showDatePicker(
+      context: context,
+      initialDate: now,
+      firstDate: now.subtract(const Duration(days: 365)),
+      lastDate: now.add(const Duration(days: 365)),
+    );
+    if (date == null) return;
+    if (!context.mounted) return;
+    await _loadForDate(context, ref, date);
+  }
+
+  Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Eliminar rutina'),
+        content: Text('¿Eliminar "${routine.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Eliminar'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      await ref.read(databaseProvider).routinesDao.deleteRoutine(routine.id);
+    }
+  }
+
+  Future<void> _loadForDate(
+      BuildContext context, WidgetRef ref, DateTime date) async {
     final db = ref.read(databaseProvider);
-    final session = await ref.read(todaySessionProvider.future);
+    final session = await db.sessionsDao.getOrCreateForDate(date);
     final parser = ref.read(_parserProvider);
     final result = parser.parse(routine.rawText);
 
