@@ -14,6 +14,7 @@ class ExerciseCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final setsAsync = ref.watch(setsByExerciseProvider(exercise.id));
+    final sets = setsAsync.valueOrNull;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -29,33 +30,26 @@ class ExerciseCard extends ConsumerWidget {
                   exercise.name,
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
-                setsAsync.when(
-                  data: (sets) {
-                    final v = calculateExerciseVolume(sets);
-                    return Text(
-                      '${v.toStringAsFixed(0)} vol',
-                      style: const TextStyle(color: Colors.blue, fontSize: 12),
-                    );
-                  },
-                  loading: () => const SizedBox.shrink(),
-                  error: (_, __) => const SizedBox.shrink(),
-                ),
+                if (sets != null)
+                  Text(
+                    '${calculateExerciseVolume(sets).toStringAsFixed(0)} vol',
+                    style: const TextStyle(color: Colors.blue, fontSize: 12),
+                  ),
               ],
             ),
           ),
-          setsAsync.when(
-            data: (sets) => Column(
-              children: sets.map((s) => SetRow(set: s)).toList(),
-            ),
-            loading: () => const Padding(
+          if (sets != null)
+            Column(children: sets.map((s) => SetRow(set: s)).toList())
+          else if (setsAsync.isLoading)
+            const Padding(
               padding: EdgeInsets.all(12),
               child: LinearProgressIndicator(),
-            ),
-            error: (e, _) => Padding(
+            )
+          else if (setsAsync.hasError)
+            Padding(
               padding: const EdgeInsets.all(12),
-              child: Text('Error: $e'),
+              child: Text('Error: ${setsAsync.error}'),
             ),
-          ),
           const SizedBox(height: 8),
         ],
       ),

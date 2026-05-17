@@ -1,0 +1,428 @@
+[ +378 ms] Unable to locate an Android SDK.
+[   +5 ms] Artifact Instance of 'MaterialFonts' is not required, skipping update.
+[        ] Artifact Instance of 'GradleWrapper' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[        ] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterSdk' is not required, skipping update.
+[        ] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FontSubsetArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'PubDependencies' is not required, skipping update.
+[        ] executing: [C:\src\flutter/] git -c log.showSignature=false log HEAD -n 1 --pretty=format:%ad --date=iso
+[  +47 ms] Exit code 0 from: git -c log.showSignature=false log HEAD -n 1 --pretty=format:%ad --date=iso
+[        ] 2026-04-29 10:03:19 -0700
+[  +10 ms] Found 4 files which will be executed as Widget Tests.
+[   +2 ms] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterEngineStamp' is not required, skipping update.
+[        ] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[   +1 ms] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[  +20 ms] Artifact Instance of 'MaterialFonts' is not required, skipping update.
+[        ] Artifact Instance of 'GradleWrapper' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterEngineStamp' is not required, skipping update.
+[        ] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterSdk' is not required, skipping update.
+[        ] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FontSubsetArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'PubDependencies' is not required, skipping update.
+[  +22 ms] Skipping pub get: version match.
+[  +70 ms] Found plugin sqlite3_flutter_libs at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\sqlite3_flutter_libs-0.5.42\
+[   +3 ms] Found plugin path_provider at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[   +1 ms] Found plugin path_provider_windows at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +2 ms] Found plugin path_provider_linux at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.6.0\
+[   +1 ms] Found plugin path_provider_android at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.3.1\
+[   +2 ms] Found plugin jni_flutter at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\jni_flutter-1.0.1\
+[   +1 ms] Found plugin jni at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\jni-1.0.0\
+[  +55 ms] Found plugin sqlite3_flutter_libs at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\sqlite3_flutter_libs-0.5.42\
+[        ] Found plugin path_provider at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[        ] Found plugin path_provider_windows at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +1 ms] Found plugin path_provider_linux at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.6.0\
+[   +1 ms] Found plugin path_provider_android at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.3.1\
+[        ] Found plugin jni_flutter at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\jni_flutter-1.0.1\
+[        ] Found plugin jni at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\jni-1.0.0\
+[   +3 ms] Generating C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\android\app\src\main\java\io\flutter\plugins\GeneratedPluginRegistrant.java
+[   +6 ms] Skipping generating GeneratedPluginRegistrant.java because it is up-to-date.
+[  +46 ms] executing: C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe -format json -products * -utf8 -latest -version 16 -requires Microsoft.VisualStudio.Workload.NativeDesktop Microsoft.VisualStudio.Component.VC.Tools.x86.x64 Microsoft.VisualStudio.Component.VC.CMake.Project
+[  +45 ms] Exit code 0 from: C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe -format json -products * -utf8 -latest -version 16 -requires Microsoft.VisualStudio.Workload.NativeDesktop Microsoft.VisualStudio.Component.VC.Tools.x86.x64 Microsoft.VisualStudio.Component.VC.CMake.Project
+[        ] []
+[        ] executing: C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe -format json -products * -utf8 -latest -version 16 -requires Microsoft.VisualStudio.Workload.VCTools Microsoft.VisualStudio.Component.VC.Tools.x86.x64 Microsoft.VisualStudio.Component.VC.CMake.Project
+[  +41 ms] Exit code 0 from: C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe -format json -products * -utf8 -latest -version 16 -requires Microsoft.VisualStudio.Workload.VCTools Microsoft.VisualStudio.Component.VC.Tools.x86.x64 Microsoft.VisualStudio.Component.VC.CMake.Project
+[        ] []
+[        ] executing: C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe -format json -products * -utf8 -latest -version 16 -prerelease -requires Microsoft.VisualStudio.Workload.NativeDesktop Microsoft.VisualStudio.Component.VC.Tools.x86.x64 Microsoft.VisualStudio.Component.VC.CMake.Project
+[  +39 ms] Exit code 0 from: C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe -format json -products * -utf8 -latest -version 16 -prerelease -requires Microsoft.VisualStudio.Workload.NativeDesktop Microsoft.VisualStudio.Component.VC.Tools.x86.x64 Microsoft.VisualStudio.Component.VC.CMake.Project
+[        ] []
+[        ] executing: C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe -format json -products * -utf8 -latest -version 16 -prerelease -requires Microsoft.VisualStudio.Workload.VCTools Microsoft.VisualStudio.Component.VC.Tools.x86.x64 Microsoft.VisualStudio.Component.VC.CMake.Project
+[  +41 ms] Exit code 0 from: C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe -format json -products * -utf8 -latest -version 16 -prerelease -requires Microsoft.VisualStudio.Workload.VCTools Microsoft.VisualStudio.Component.VC.Tools.x86.x64 Microsoft.VisualStudio.Component.VC.CMake.Project
+[        ] []
+[        ] executing: C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe -format json -products * -utf8 -latest -prerelease -all
+[  +39 ms] Exit code 0 from: C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe -format json -products * -utf8 -latest -prerelease -all
+[        ] [
+             {
+               "instanceId": "c1c0ee0b",
+               "installDate": "2025-07-21T23:30:22Z",
+               "installationName": "SSMS/21.6.17+36603.0",
+               "installationPath": "C:\\Program Files\\Microsoft SQL Server Management Studio 21\\Release",
+               "installationVersion": "21.6.36603.0",
+               "productId": "Microsoft.VisualStudio.Product.Ssms",
+               "productPath": "C:\\Program Files\\Microsoft SQL Server Management Studio 21\\Release\\Common7\\IDE\\SSMS.exe",
+               "state": 4294967295,
+               "isComplete": true,
+               "isLaunchable": true,
+               "isPrerelease": false,
+               "isRebootRequired": false,
+               "displayName": "SQL Server Management Studio 21",
+               "description": "An integrated environment for managing any SQL infrastructure, from SQL Server to Azure SQL",
+               "channelId": "SSMS.21.SSMS.Release",
+               "channelUri": "https://aka.ms/ssms/21/release/channel",
+               "enginePath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\resources\\app\\ServiceHub\\Services\\Microsoft.VisualStudio.Setup.Service",
+               "installedChannelId": "SSMS.21.SSMS.Release",
+               "installedChannelUri": "https://aka.ms/ssms/21/release/channel",
+               "releaseNotes": "https://aka.ms/SSMSReleaseNotes-21#21.6.17",
+               "resolvedInstallationPath": "C:\\Program Files\\Microsoft SQL Server Management Studio 21\\Release",
+               "thirdPartyNotices": "https://aka.ms/ssms-thirdpartynotices",
+               "updateDate": "2026-01-15T21:34:03.5759721Z",
+               "catalog": {
+                 "buildBranch": "d17.14",
+                 "buildVersion": "21.6.36603.0",
+                 "id": "SSMS/21.6.17+36603.0",
+                 "localBuild": "build-lab",
+                 "manifestName": "SSMS",
+                 "manifestType": "installer",
+                 "productDisplayVersion": "21.6.17",
+                 "productLine": "SSMS21",
+                 "productLineVersion": "21",
+                 "productMilestone": "RTW",
+                 "productMilestoneIsPreRelease": "False",
+                 "productName": "SQL Server Management Studio",
+                 "productPatchVersion": "17",
+                 "productPreReleaseMilestoneSuffix": "1.0",
+                 "productSemanticVersion": "21.6.17+36603.0",
+                 "requiredEngineVersion": "3.14.2086.54749"
+               },
+               "properties": {
+                 "appLocalWPF": "false",
+                 "campaignId": "",
+                 "channelManifestId": "SSMS.21.SSMS.Release/21.6.17+36603.0",
+                 "includeRecommended": "0",
+                 "nickname": "",
+                 "setupEngineFilePath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\setup.exe"
+               }
+             }
+           ]
+[   +2 ms] Building native assets for windows_x64.
+[  +42 ms] input.json contents:
+           {
+             "assets": {},
+             "config": {
+               "build_asset_types": [
+                 "code_assets/code"
+               ],
+               "extensions": {
+                 "code_assets": {
+                   "link_mode_preference": "dynamic",
+                   "target_architecture": "x64",
+                   "target_os": "windows"
+                 }
+               },
+               "linking_enabled": false
+             },
+             "out_dir_shared": "C:\\Users\\gabri\\source\\repos\\Proyectos\\workoutApp\\workout_app\\.dart_tool\\hooks_runner\\shared\\sqlite3\\build\\",
+             "out_file": "C:\\Users\\gabri\\source\\repos\\Proyectos\\workoutApp\\workout_app\\.dart_tool\\hooks_runner\\sqlite3\\8e04c28b44\\output.json",
+             "package_name": "sqlite3",
+             "package_root": "C:\\Users\\gabri\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\sqlite3-3.3.1\\",
+             "user_defines": {}
+           }
+[   +3 ms] output.json contents:
+           {
+             "assets": [
+               {
+                 "encoding": {
+                   "file": "C:\\Users\\gabri\\source\\repos\\Proyectos\\workoutApp\\workout_app\\.dart_tool\\hooks_runner\\shared\\sqlite3\\build\\download-8ca4706\\sqlite3.dll",
+                   "id": "package:sqlite3/src/ffi/libsqlite3.g.dart",
+                   "link_mode": {
+                     "type": "dynamic_loading_bundle"
+                   }
+                 },
+                 "type": "code_assets/code"
+               }
+             ],
+             "assets_for_linking": {},
+             "status": "success",
+             "timestamp": "2026-05-17 14:26:01.000"
+           }
+[   +2 ms] Skipping build for sqlite3 in C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\.dart_tool\hooks_runner\sqlite3\8e04c28b44\. Last build on 2026-05-17 14:26:01.000.
+[   +8 ms] input.json contents:
+           {
+             "assets": {},
+             "config": {
+               "build_asset_types": [
+                 "code_assets/code"
+               ],
+               "extensions": {
+                 "code_assets": {
+                   "link_mode_preference": "dynamic",
+                   "target_architecture": "x64",
+                   "target_os": "windows"
+                 }
+               },
+               "linking_enabled": false
+             },
+             "out_dir_shared": "C:\\Users\\gabri\\source\\repos\\Proyectos\\workoutApp\\workout_app\\.dart_tool\\hooks_runner\\shared\\objective_c\\build\\",
+             "out_file": "C:\\Users\\gabri\\source\\repos\\Proyectos\\workoutApp\\workout_app\\.dart_tool\\hooks_runner\\objective_c\\8e04c28b44\\output.json",
+             "package_name": "objective_c",
+             "package_root": "C:\\Users\\gabri\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\objective_c-9.3.0\\",
+             "user_defines": {}
+           }
+[        ] output.json contents:
+           {
+             "assets_for_linking": {},
+             "status": "success",
+             "timestamp": "2026-05-17 14:26:03.000"
+           }
+[   +1 ms] Skipping build for objective_c in C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\.dart_tool\hooks_runner\objective_c\8e04c28b44\. Last build on 2026-05-17 14:26:03.000.
+[   +3 ms] Note: You are using the dart build hooks feature which is currently in preview. Please see https://dart.dev/interop/c-interop#native-assets for more details.
+[        ] Building native assets for windows_x64 done.
+[        ] Copying native assets to C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\build\native_assets\windows\.
+[  +11 ms] Copying native assets done.
+[        ] Writing native assets json to file:///C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/build/native_assets/windows/native_assets.json.
+[   +2 ms] Writing C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\build\native_assets\windows\native_assets.json done.
+[  +77 ms] running test package with arguments: [--no-color, --chain-stack-traces, --, file:///C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/database/daos_test.dart, file:///C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/parser/routine_parser_test.dart, file:///C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/volume_test.dart, file:///C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/widget_test.dart]
+00:00 +0: loading C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/database/daos_test.dart
+[  +73 ms] test 0: starting test C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/database/daos_test.dart
+[   +3 ms] Stopping scan for flutter_test_config.dart; found project root at C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app
+[   +3 ms] Compiler will use the following file as its incremental dill file: C:\Users\gabri\AppData\Local\Temp\flutter_tools.6157065c\flutter_test_compiler.e1c606c8\output.dill
+[        ] Listening to compiler controller...
+[   +3 ms] Compiling file:///C:/Users/gabri/AppData/Local/Temp/flutter_tools.6157065c/flutter_test_listener.ac6394f8/listener.dart
+[   +4 ms] test 1: starting test C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/parser/routine_parser_test.dart
+[   +1 ms] Stopping scan for flutter_test_config.dart; found project root at C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app
+[   +1 ms] test 2: starting test C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/volume_test.dart
+[   +1 ms] Stopping scan for flutter_test_config.dart; found project root at C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app
+[   +2 ms] test 3: starting test C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/widget_test.dart
+[   +2 ms] Stopping scan for flutter_test_config.dart; found project root at C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app
+[  +33 ms] Found plugin sqlite3_flutter_libs at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\sqlite3_flutter_libs-0.5.42\
+[   +1 ms] Found plugin path_provider at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[        ] Found plugin path_provider_windows at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +2 ms] Found plugin path_provider_linux at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.6.0\
+[   +1 ms] Found plugin path_provider_android at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.3.1\
+[        ] Found plugin jni_flutter at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\jni_flutter-1.0.1\
+[        ] Found plugin jni at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\jni-1.0.0\
+[   +5 ms] Skipping generating dart_plugin_registrant.dart because it is up-to-date.
+[   +2 ms] C:\src\flutter\bin\cache\dart-sdk\bin\dartaotruntime.exe C:\src\flutter\bin\cache\dart-sdk\bin\snapshots\frontend_server_aot.dart.snapshot --sdk-root C:\src\flutter\bin\cache\artifacts\engine\common\flutter_patched_sdk/ --incremental --no-print-incremental-dependencies --target=flutter --experimental-emit-debug-metadata -DFLUTTER_VERSION=3.41.9 -DFLUTTER_CHANNEL=stable -DFLUTTER_GIT_URL=https://github.com/flutter/flutter.git -DFLUTTER_FRAMEWORK_REVISION=00b0c91f06 -DFLUTTER_ENGINE_REVISION=42d3d75a56 -DFLUTTER_DART_VERSION=3.11.5 --output-dill C:\Users\gabri\AppData\Local\Temp\flutter_tools.6157065c\flutter_test_compiler.e1c606c8\output.dill --packages C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\.dart_tool\package_config.json -Ddart.vm.profile=false -Ddart.vm.product=false --enable-asserts --track-widget-creation --initialize-from-dill C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\build\test_cache\build\89a6598c8854ed031dfc25d83c80860e.cache.dill.track.dill --verbosity=error
+[   +9 ms] <- compile file:///C:/Users/gabri/AppData/Local/Temp/flutter_tools.6157065c/flutter_test_listener.ac6394f8/listener.dart
+[ +699 ms] <- accept
+[        ] <- reset
+[        ] Compiling file:///C:/Users/gabri/AppData/Local/Temp/flutter_tools.6157065c/flutter_test_listener.ac6394f8/listener.dart took 773ms
+[        ] Compiling file:///C:/Users/gabri/AppData/Local/Temp/flutter_tools.6157065c/flutter_test_listener.fffd12ce/listener.dart
+[        ] test 0: starting test device
+[   +2 ms] test 0: awaiting connection to test device
+[   +2 ms] test 0: VM Service uri is not available
+[   +2 ms] test 0: test harness socket server is running at port:50423
+[        ] Using this directory for fonts configuration: C:\Users\gabri\AppData\Local\Temp\flutter_tools.6157065c\flutter_test_fonts.4cd78da1
+[   +1 ms] test 0: Starting flutter_tester process with command=[C:\src\flutter\bin\cache\artifacts\engine\windows-x64\flutter_tester.exe, --disable-vm-service, --enable-checked-mode, --verify-entry-points, --enable-software-rendering, --skia-deterministic-rendering, --enable-dart-profiling, --non-interactive, --use-test-fonts, --disable-asset-fonts, --packages=C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\.dart_tool\package_config.json, --flutter-assets-dir=C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\build\unit_test_assets, C:\Users\gabri\AppData\Local\Temp\flutter_tools.6157065c\flutter_test_listener.ac6394f8\listener.dart.dill], environment={FLUTTER_TEST: true, FONTCONFIG_FILE: C:\Users\gabri\AppData\Local\Temp\flutter_tools.6157065c\flutter_test_fonts.4cd78da1/fonts.conf, SERVER_PORT: 50423, APP_NAME: workout_app, UNIT_TEST_ASSETS: C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\build\unit_test_assets, PATH: C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\build\native_assets\windows\;C:\src\flutter\bin;C:\Program Files\WindowsApps\Microsoft.PowerShell_7.6.1.0_x64__8wekyb3d8bbwe;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.0\bin\x64;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.0\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\dotnet\;C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR;C:\Program Files\Git\cmd;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\NVIDIA Corporation\Nsight Compute 2025.3.0\;C:\Program Files\nodejs\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\OpenSSL-Win64\bin;C:\Users\gabri\AppData\Local\pnpm;C:\Users\gabri\.cargo\bin;C:\Users\gabri\AppData\Local\Microsoft\WindowsApps;C:\Users\gabri\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\gabri\AppData\Local\Programs\Ollama;C:\Users\gabri\AppData\Roaming\npm;C:\Users\gabri\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\gabri\AppData\Local\Programs\Antigravity\bin;C:\Users\gabri\.local\bin;C:\Users\gabri\AppData\Local\Microsoft\WinGet\Packages\pnpm.pnpm_Microsoft.Winget.Source_8wekyb3d8bbwe;C:\Users\gabri\.dotnet\tools;C:\Users\gabri\AppData\Local\PowerToys\DSCModules\;C:\Users\gabri\AppData\Local\Python\bin;C:\src\flutter\bin\mingit\cmd}
+[   +4 ms] test 0: Started flutter_tester process at pid 18168
+[  +49 ms] Found plugin sqlite3_flutter_libs at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\sqlite3_flutter_libs-0.5.42\
+[   +1 ms] Found plugin path_provider at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[   +1 ms] Found plugin path_provider_windows at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +3 ms] Found plugin path_provider_linux at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.6.0\
+[   +1 ms] Found plugin path_provider_android at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.3.1\
+[        ] Found plugin jni_flutter at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\jni_flutter-1.0.1\
+[        ] Found plugin jni at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\jni-1.0.0\
+[   +5 ms] Skipping generating dart_plugin_registrant.dart because it is up-to-date.
+[        ] <- recompile file:///C:/Users/gabri/AppData/Local/Temp/flutter_tools.6157065c/flutter_test_listener.fffd12ce/listener.dart 5dffa723-7b49-4426-b518-b8e25f379bf6
+[        ] file:///C:/Users/gabri/AppData/Local/Temp/flutter_tools.6157065c/flutter_test_listener.fffd12ce/listener.dart
+[        ] file:///C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/.dart_tool/flutter_build/dart_plugin_registrant.dart
+[        ] <- 5dffa723-7b49-4426-b518-b8e25f379bf6
+[  +78 ms] <- accept
+[        ] <- reset
+[        ] Compiling file:///C:/Users/gabri/AppData/Local/Temp/flutter_tools.6157065c/flutter_test_listener.fffd12ce/listener.dart took 161ms
+[        ] Compiling file:///C:/Users/gabri/AppData/Local/Temp/flutter_tools.6157065c/flutter_test_listener.c5338466/listener.dart
+[        ] test 1: starting test device
+[        ] test 1: awaiting connection to test device
+[   +2 ms] test 1: VM Service uri is not available
+[        ] test 1: test harness socket server is running at port:50424
+[        ] test 1: Starting flutter_tester process with command=[C:\src\flutter\bin\cache\artifacts\engine\windows-x64\flutter_tester.exe, --disable-vm-service, --enable-checked-mode, --verify-entry-points, --enable-software-rendering, --skia-deterministic-rendering, --enable-dart-profiling, --non-interactive, --use-test-fonts, --disable-asset-fonts, --packages=C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\.dart_tool\package_config.json, --flutter-assets-dir=C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\build\unit_test_assets, C:\Users\gabri\AppData\Local\Temp\flutter_tools.6157065c\flutter_test_listener.fffd12ce\listener.dart.dill], environment={FLUTTER_TEST: true, FONTCONFIG_FILE: C:\Users\gabri\AppData\Local\Temp\flutter_tools.6157065c\flutter_test_fonts.4cd78da1/fonts.conf, SERVER_PORT: 50424, APP_NAME: workout_app, UNIT_TEST_ASSETS: C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\build\unit_test_assets, PATH: C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\build\native_assets\windows\;C:\src\flutter\bin;C:\Program Files\WindowsApps\Microsoft.PowerShell_7.6.1.0_x64__8wekyb3d8bbwe;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.0\bin\x64;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.0\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\dotnet\;C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR;C:\Program Files\Git\cmd;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\NVIDIA Corporation\Nsight Compute 2025.3.0\;C:\Program Files\nodejs\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\OpenSSL-Win64\bin;C:\Users\gabri\AppData\Local\pnpm;C:\Users\gabri\.cargo\bin;C:\Users\gabri\AppData\Local\Microsoft\WindowsApps;C:\Users\gabri\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\gabri\AppData\Local\Programs\Ollama;C:\Users\gabri\AppData\Roaming\npm;C:\Users\gabri\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\gabri\AppData\Local\Programs\Antigravity\bin;C:\Users\gabri\.local\bin;C:\Users\gabri\AppData\Local\Microsoft\WinGet\Packages\pnpm.pnpm_Microsoft.Winget.Source_8wekyb3d8bbwe;C:\Users\gabri\.dotnet\tools;C:\Users\gabri\AppData\Local\PowerToys\DSCModules\;C:\Users\gabri\AppData\Local\Python\bin;C:\src\flutter\bin\mingit\cmd}
+[   +6 ms] test 1: Started flutter_tester process at pid 35164
+[  +74 ms] Found plugin sqlite3_flutter_libs at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\sqlite3_flutter_libs-0.5.42\
+[   +4 ms] test 0: connected to test device, now awaiting test result
+[        ] test 0: Waiting for test harness or tests to finish
+[   +4 ms] Found plugin path_provider at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[   +2 ms] Found plugin path_provider_windows at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +4 ms] Found plugin path_provider_linux at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +2 ms] Found plugin path_provider_foundation at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.6.0\
+[   +2 ms] Found plugin path_provider_android at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.3.1\
+[   +1 ms] Found plugin jni_flutter at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\jni_flutter-1.0.1\
+[   +1 ms] Found plugin jni at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\jni-1.0.0\
+[   +5 ms] Skipping generating dart_plugin_registrant.dart because it is up-to-date.
+[        ] <- recompile file:///C:/Users/gabri/AppData/Local/Temp/flutter_tools.6157065c/flutter_test_listener.c5338466/listener.dart b72ab09b-8099-4a4f-9a6a-c26301213bfa
+[        ] file:///C:/Users/gabri/AppData/Local/Temp/flutter_tools.6157065c/flutter_test_listener.c5338466/listener.dart
+[        ] file:///C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/.dart_tool/flutter_build/dart_plugin_registrant.dart
+[        ] <- b72ab09b-8099-4a4f-9a6a-c26301213bfa
+00:00 +0: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/database/daos_test.dart: SessionsDao getByDate returns null when no session exists
+[  +81 ms] <- accept
+[        ] <- reset
+[        ] Compiling file:///C:/Users/gabri/AppData/Local/Temp/flutter_tools.6157065c/flutter_test_listener.c5338466/listener.dart took 194ms
+[        ] Compiling file:///C:/Users/gabri/AppData/Local/Temp/flutter_tools.6157065c/flutter_test_listener.9e9a6da5/listener.dart
+[        ] test 2: starting test device
+[        ] test 2: awaiting connection to test device
+[   +2 ms] test 2: VM Service uri is not available
+[        ] test 2: test harness socket server is running at port:50426
+[        ] test 2: Starting flutter_tester process with command=[C:\src\flutter\bin\cache\artifacts\engine\windows-x64\flutter_tester.exe, --disable-vm-service, --enable-checked-mode, --verify-entry-points, --enable-software-rendering, --skia-deterministic-rendering, --enable-dart-profiling, --non-interactive, --use-test-fonts, --disable-asset-fonts, --packages=C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\.dart_tool\package_config.json, --flutter-assets-dir=C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\build\unit_test_assets, C:\Users\gabri\AppData\Local\Temp\flutter_tools.6157065c\flutter_test_listener.c5338466\listener.dart.dill], environment={FLUTTER_TEST: true, FONTCONFIG_FILE: C:\Users\gabri\AppData\Local\Temp\flutter_tools.6157065c\flutter_test_fonts.4cd78da1/fonts.conf, SERVER_PORT: 50426, APP_NAME: workout_app, UNIT_TEST_ASSETS: C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\build\unit_test_assets, PATH: C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\build\native_assets\windows\;C:\src\flutter\bin;C:\Program Files\WindowsApps\Microsoft.PowerShell_7.6.1.0_x64__8wekyb3d8bbwe;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.0\bin\x64;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.0\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\dotnet\;C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR;C:\Program Files\Git\cmd;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\NVIDIA Corporation\Nsight Compute 2025.3.0\;C:\Program Files\nodejs\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\OpenSSL-Win64\bin;C:\Users\gabri\AppData\Local\pnpm;C:\Users\gabri\.cargo\bin;C:\Users\gabri\AppData\Local\Microsoft\WindowsApps;C:\Users\gabri\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\gabri\AppData\Local\Programs\Ollama;C:\Users\gabri\AppData\Roaming\npm;C:\Users\gabri\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\gabri\AppData\Local\Programs\Antigravity\bin;C:\Users\gabri\.local\bin;C:\Users\gabri\AppData\Local\Microsoft\WinGet\Packages\pnpm.pnpm_Microsoft.Winget.Source_8wekyb3d8bbwe;C:\Users\gabri\.dotnet\tools;C:\Users\gabri\AppData\Local\PowerToys\DSCModules\;C:\Users\gabri\AppData\Local\Python\bin;C:\src\flutter\bin\mingit\cmd}
+[   +5 ms] test 2: Started flutter_tester process at pid 29136
+[  +25 ms] test 1: connected to test device, now awaiting test result
+[        ] test 1: Waiting for test harness or tests to finish
+00:00 +1: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/database/daos_test.dart: SessionsDao insertSession normalises to midnight and getByDate finds it
+00:00 +2: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/database/daos_test.dart: SessionsDao watchWeek emits only sessions in range
+00:00 +3: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/database/daos_test.dart: ExercisesDao + SetsDao insert exercise and watch by session
+00:00 +4: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/parser/routine_parser_test.dart: NxM pattern parses "press plano 4x8"
+[  +56 ms] Found plugin sqlite3_flutter_libs at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\sqlite3_flutter_libs-0.5.42\
+[   +1 ms] Found plugin path_provider at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[   +2 ms] Found plugin path_provider_windows at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+00:00 +5: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/parser/routine_parser_test.dart: NxM pattern parses "press plano 4x8"
+[   +7 ms] Found plugin path_provider_linux at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+00:00 +6: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/database/daos_test.dart: ExercisesDao + SetsDao watchBySession returns sets across all exercises
+[   +3 ms] Found plugin path_provider_foundation at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.6.0\
+00:00 +7: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/database/daos_test.dart: ExercisesDao + SetsDao watchBySession returns sets across all exercises
+[   +3 ms] Found plugin path_provider_android at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.3.1\
+[   +2 ms] Found plugin jni_flutter at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\jni_flutter-1.0.1\
+[   +1 ms] Found plugin jni at C:\Users\gabri\AppData\Local\Pub\Cache\hosted\pub.dev\jni-1.0.0\
+00:00 +8: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/database/daos_test.dart: ExercisesDao + SetsDao watchBySession returns sets across all exercises
+00:00 +9: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/parser/routine_parser_test.dart: NxM pattern parses "bíceps barra 4x12 SP" with last set is_partial
+[   +4 ms] test 0: Test harness is no longer needed by test process
+[        ] test 0: finished
+[        ] test 0: cleaning up...
+[        ] test 0: ensuring test device is terminated.
+[        ] test 0: Terminating flutter_tester process
+[        ] test 0: Shutting down DevTools server
+[        ] test 0: Test process is no longer needed by test harness
+[        ] test 0: Shutting down test harness socket server
+00:00 +10: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/parser/routine_parser_test.dart: NxM pattern is case-insensitive
+[   +5 ms] Skipping generating dart_plugin_registrant.dart because it is up-to-date.
+[        ] <- recompile file:///C:/Users/gabri/AppData/Local/Temp/flutter_tools.6157065c/flutter_test_listener.9e9a6da5/listener.dart 12b40512-3cc5-4d02-ba1b-cf7d7849813f
+[        ] file:///C:/Users/gabri/AppData/Local/Temp/flutter_tools.6157065c/flutter_test_listener.9e9a6da5/listener.dart
+[        ] file:///C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/.dart_tool/flutter_build/dart_plugin_registrant.dart
+[        ] <- 12b40512-3cc5-4d02-ba1b-cf7d7849813f
+00:00 +11: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/parser/routine_parser_test.dart: dot pattern parses "sentadillas 12.10.8.6"
+00:00 +12: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/parser/routine_parser_test.dart: dot pattern parses "Femorales camilla 12.12.10.10"
+[   +8 ms] test 0: flutter_tester process at pid 18168 exited with code=-1
+[        ] test 0: deleting temporary directory
+[   +6 ms] test 0: finished
+00:00 +13: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/parser/routine_parser_test.dart: failure pattern parses "dominadas asistidas 4xfallo"
+00:00 +14: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/parser/routine_parser_test.dart: failure pattern parses "dominadas asistidas 4xfallo 6-10 reps SP" with last partial
+00:00 +15: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/parser/routine_parser_test.dart: unrecognized lines complex circuit line goes to unrecognized
+00:00 +16: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/parser/routine_parser_test.dart: unrecognized lines empty lines are skipped
+00:00 +17: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/parser/routine_parser_test.dart: unrecognized lines section headers like "Femorales camilla 12.12.10.10" before empty line
+00:00 +18: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/parser/routine_parser_test.dart: multi-line input parses full routine from Brainstorming examples
+[  +17 ms] test 1: Test harness is no longer needed by test process
+[        ] test 1: finished
+[        ] test 1: cleaning up...
+[        ] test 1: ensuring test device is terminated.
+[        ] test 1: Terminating flutter_tester process
+[        ] test 1: Shutting down DevTools server
+[        ] test 1: Test process is no longer needed by test harness
+[        ] test 1: Shutting down test harness socket server
+[  +15 ms] test 1: flutter_tester process at pid 35164 exited with code=-1
+[        ] test 1: deleting temporary directory
+[   +5 ms] test 1: finished
+[  +35 ms] <- accept
+[        ] <- reset
+[        ] Compiling file:///C:/Users/gabri/AppData/Local/Temp/flutter_tools.6157065c/flutter_test_listener.9e9a6da5/listener.dart took 217ms
+[        ] test 3: starting test device
+[        ] test 3: awaiting connection to test device
+[        ] test 3: VM Service uri is not available
+[        ] test 3: test harness socket server is running at port:50429
+[        ] test 3: Starting flutter_tester process with command=[C:\src\flutter\bin\cache\artifacts\engine\windows-x64\flutter_tester.exe, --disable-vm-service, --enable-checked-mode, --verify-entry-points, --enable-software-rendering, --skia-deterministic-rendering, --enable-dart-profiling, --non-interactive, --use-test-fonts, --disable-asset-fonts, --packages=C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\.dart_tool\package_config.json, --flutter-assets-dir=C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\build\unit_test_assets, C:\Users\gabri\AppData\Local\Temp\flutter_tools.6157065c\flutter_test_listener.9e9a6da5\listener.dart.dill], environment={FLUTTER_TEST: true, FONTCONFIG_FILE: C:\Users\gabri\AppData\Local\Temp\flutter_tools.6157065c\flutter_test_fonts.4cd78da1/fonts.conf, SERVER_PORT: 50429, APP_NAME: workout_app, UNIT_TEST_ASSETS: C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\build\unit_test_assets, PATH: C:\Users\gabri\source\repos\Proyectos\workoutApp\workout_app\build\native_assets\windows\;C:\src\flutter\bin;C:\Program Files\WindowsApps\Microsoft.PowerShell_7.6.1.0_x64__8wekyb3d8bbwe;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.0\bin\x64;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v13.0\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\dotnet\;C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR;C:\Program Files\Git\cmd;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\NVIDIA Corporation\Nsight Compute 2025.3.0\;C:\Program Files\nodejs\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\OpenSSL-Win64\bin;C:\Users\gabri\AppData\Local\pnpm;C:\Users\gabri\.cargo\bin;C:\Users\gabri\AppData\Local\Microsoft\WindowsApps;C:\Users\gabri\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\gabri\AppData\Local\Programs\Ollama;C:\Users\gabri\AppData\Roaming\npm;C:\Users\gabri\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\gabri\AppData\Local\Programs\Antigravity\bin;C:\Users\gabri\.local\bin;C:\Users\gabri\AppData\Local\Microsoft\WinGet\Packages\pnpm.pnpm_Microsoft.Winget.Source_8wekyb3d8bbwe;C:\Users\gabri\.dotnet\tools;C:\Users\gabri\AppData\Local\PowerToys\DSCModules\;C:\Users\gabri\AppData\Local\Python\bin;C:\src\flutter\bin\mingit\cmd}
+[   +4 ms] test 3: Started flutter_tester process at pid 12068
+[  +10 ms] test 2: connected to test device, now awaiting test result
+[        ] test 2: Waiting for test harness or tests to finish
+00:00 +19: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/volume_test.dart: calculateSetVolume reps × weight when both present
+00:00 +20: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/volume_test.dart: calculateSetVolume reps only when no weight
+00:00 +21: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/volume_test.dart: calculateSetVolume zero for to_failure sets
+00:00 +22: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/volume_test.dart: calculateSetVolume zero when reps is null and not to_failure
+00:00 +23: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/volume_test.dart: calculateExerciseVolume sums set volumes
+00:00 +24: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/volume_test.dart: calculateExerciseVolume skips to_failure sets
+00:00 +25: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/core/volume_test.dart: calculateExerciseVolume returns 0 for empty list
+[  +70 ms] test 2: Test harness is no longer needed by test process
+[        ] test 2: finished
+[        ] test 2: cleaning up...
+[        ] test 2: ensuring test device is terminated.
+[        ] test 2: Terminating flutter_tester process
+[        ] test 2: Shutting down DevTools server
+[        ] test 2: Test process is no longer needed by test harness
+[        ] test 2: Shutting down test harness socket server
+[  +11 ms] test 2: flutter_tester process at pid 29136 exited with code=-1
+[        ] test 2: deleting temporary directory
+[   +4 ms] test 2: finished
+[ +110 ms] test 3: connected to test device, now awaiting test result
+[        ] test 3: Waiting for test harness or tests to finish
+00:00 +26: C:/Users/gabri/source/repos/Proyectos/workoutApp/workout_app/test/widget_test.dart: Counter increments smoke test
+[ +550 ms] test 3: Test harness is no longer needed by test process
+[        ] test 3: finished
+[        ] test 3: cleaning up...
+[        ] test 3: ensuring test device is terminated.
+[        ] test 3: Terminating flutter_tester process
+[        ] test 3: Shutting down DevTools server
+[        ] test 3: Test process is no longer needed by test harness
+[        ] test 3: Shutting down test harness socket server
+[  +14 ms] test 3: flutter_tester process at pid 12068 exited with code=-1
+[        ] test 3: deleting temporary directory
+[   +4 ms] test 3: finished
+00:01 +27: All tests passed!
+[   +3 ms] Deleting C:\Users\gabri\AppData\Local\Temp\flutter_tools.6157065c\flutter_test_compiler.e1c606c8...
+[   +4 ms] killing pid 27500
+[  +21 ms] Deleting C:\Users\gabri\AppData\Local\Temp\flutter_tools.6157065c\flutter_test_fonts.4cd78da1...
+[   +3 ms] test package returned with exit code 0
+[        ] Runtime for phase TestRunner: Wall-clock: 0:00:02.251808; combined: 0:00:02.251820.
+[        ] Runtime for phase Compile: Wall-clock: 0:00:01.346192; combined: 0:00:01.346209.
+[        ] Runtime for phase Run: Wall-clock: 0:00:01.336440; combined: 0:00:01.895140.
+[        ] Runtime for phase CoverageTotal: Wall-clock: 0:00:00.000000; combined: 0:00:00.000000.
+[        ] Runtime for phase CoverageCollect: Wall-clock: 0:00:00.000000; combined: 0:00:00.000000.
+[        ] Runtime for phase CoverageParseJson: Wall-clock: 0:00:00.000000; combined: 0:00:00.000000.
+[        ] Runtime for phase CoverageAddHitmap: Wall-clock: 0:00:00.000000; combined: 0:00:00.000000.
+[        ] Runtime for phase CoverageDataCollect: Wall-clock: 0:00:00.000000; combined: 0:00:00.000000.
+[        ] Runtime for phase WatcherFinishedTest: Wall-clock: 0:00:00.000455; combined: 0:00:00.000460.
+[   +3 ms] "flutter test" took 2.873ms.
+[  +48 ms] Running 6 shutdown hooks
+[   +1 ms] Shutdown hooks complete
+[ +128 ms] exiting with code 0

@@ -32,56 +32,54 @@ class _TodayContent extends ConsumerWidget {
     final exercisesAsync = ref.watch(exercisesBySessionProvider(session.id));
     final volumeAsync = ref.watch(dailyVolumeProvider(session.id));
 
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    _formatDate(session.date),
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _formatDate(session.date),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                volumeAsync.when(
+                  data: (v) => Text(
+                    'Vol: ${v.toStringAsFixed(0)}',
+                    style: const TextStyle(color: Colors.blue),
                   ),
-                  volumeAsync.when(
-                    data: (v) => Text(
-                      'Vol: ${v.toStringAsFixed(0)}',
-                      style: const TextStyle(color: Colors.blue),
-                    ),
-                    loading: () => const SizedBox.shrink(),
-                    error: (_, __) => const SizedBox.shrink(),
-                  ),
-                ],
-              ),
+                  loading: () => const SizedBox.shrink(),
+                  error: (_, __) => const SizedBox.shrink(),
+                ),
+              ],
             ),
           ),
-          exercisesAsync.when(
-            data: (exercises) => SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (_, i) => ExerciseCard(exercise: exercises[i]),
-                childCount: exercises.length,
-              ),
-            ),
-            loading: () => const SliverToBoxAdapter(
-              child: Center(child: CircularProgressIndicator()),
-            ),
-            error: (e, _) => SliverToBoxAdapter(
-              child: Center(child: Text('Error: $e')),
+        ),
+        exercisesAsync.when(
+          data: (exercises) => SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (_, i) => ExerciseCard(exercise: exercises[i]),
+              childCount: exercises.length,
             ),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: OutlinedButton(
-                onPressed: () => _addExercise(context, ref, session.id),
-                child: const Text('+ Agregar ejercicio'),
-              ),
+          loading: () => const SliverToBoxAdapter(
+            child: Center(child: CircularProgressIndicator()),
+          ),
+          error: (e, _) => SliverToBoxAdapter(
+            child: Center(child: Text('Error: $e')),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: OutlinedButton(
+              onPressed: () => _addExercise(context, ref, session.id),
+              child: const Text('+ Agregar ejercicio'),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
