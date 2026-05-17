@@ -121,40 +121,53 @@ class _RoutineTile extends ConsumerWidget {
 
   Future<void> _loadForDate(
       BuildContext context, WidgetRef ref, DateTime date) async {
-    final db = ref.read(databaseProvider);
-    final session = await db.sessionsDao.getOrCreateForDate(date);
-    final parser = ref.read(_parserProvider);
-    final result = parser.parse(routine.rawText);
+    try {
+      final db = ref.read(databaseProvider);
+      final session = await db.sessionsDao.getOrCreateForDate(date);
+      final parser = ref.read(_parserProvider);
+      final result = parser.parse(routine.rawText);
 
-    int order = await db.exercisesDao.countBySession(session.id);
-    for (final ex in result.exercises) {
-      final eid = await db.exercisesDao.insertExercise(
-        ExercisesCompanion(
-          sessionId: Value(session.id),
-          name: Value(ex.name),
-          orderIndex: Value(order++),
-          restSeconds: Value(ex.restSeconds),
-        ),
-      );
-      for (int i = 0; i < ex.sets.length; i++) {
-        final s = ex.sets[i];
-        await db.setsDao.insertSet(
-          SetsCompanion(
-            exerciseId: Value(eid),
-            setNumber: Value(i + 1),
-            reps: Value(s.reps),
-            weight: Value(s.weight),
-            toFailure: Value(s.toFailure),
-            isPartial: Value(s.isPartial),
+      int order = await db.exercisesDao.countBySession(session.id);
+      for (final ex in result.exercises) {
+        final eid = await db.exercisesDao.insertExercise(
+          ExercisesCompanion(
+            sessionId: Value(session.id),
+            name: Value(ex.name),
+            orderIndex: Value(order++),
+            restSeconds: Value(ex.restSeconds),
+          ),
+        );
+        for (int i = 0; i < ex.sets.length; i++) {
+          final s = ex.sets[i];
+          await db.setsDao.insertSet(
+            SetsCompanion(
+              exerciseId: Value(eid),
+              setNumber: Value(i + 1),
+              reps: Value(s.reps),
+              weight: Value(s.weight),
+              toFailure: Value(s.toFailure),
+              isPartial: Value(s.isPartial),
+            ),
+          );
+        }
+      }
+
+      if (context.mounted) {
+        final msg = result.exercises.isEmpty
+            ? 'Sin ejercicios reconocidos (${result.unrecognized.length} líneas sin parsear)'
+            : '${result.exercises.length} ejercicios cargados';
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(msg)));
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red[700],
           ),
         );
       }
-    }
-
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${result.exercises.length} ejercicios cargados')),
-      );
     }
   }
 }
