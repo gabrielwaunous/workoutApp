@@ -997,6 +997,19 @@ class $SetsTable extends Sets with TableInfo<$SetsTable, WorkoutSet> {
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _isDoneMeta = const VerificationMeta('isDone');
+  @override
+  late final GeneratedColumn<bool> isDone = GeneratedColumn<bool>(
+    'is_done',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_done" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1006,6 +1019,7 @@ class $SetsTable extends Sets with TableInfo<$SetsTable, WorkoutSet> {
     weight,
     toFailure,
     isPartial,
+    isDone,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1062,6 +1076,12 @@ class $SetsTable extends Sets with TableInfo<$SetsTable, WorkoutSet> {
         isPartial.isAcceptableOrUnknown(data['is_partial']!, _isPartialMeta),
       );
     }
+    if (data.containsKey('is_done')) {
+      context.handle(
+        _isDoneMeta,
+        isDone.isAcceptableOrUnknown(data['is_done']!, _isDoneMeta),
+      );
+    }
     return context;
   }
 
@@ -1099,6 +1119,10 @@ class $SetsTable extends Sets with TableInfo<$SetsTable, WorkoutSet> {
         DriftSqlType.bool,
         data['${effectivePrefix}is_partial'],
       )!,
+      isDone: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_done'],
+      )!,
     );
   }
 
@@ -1116,6 +1140,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
   final double? weight;
   final bool toFailure;
   final bool isPartial;
+  final bool isDone;
   const WorkoutSet({
     required this.id,
     required this.exerciseId,
@@ -1124,6 +1149,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
     this.weight,
     required this.toFailure,
     required this.isPartial,
+    required this.isDone,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1139,6 +1165,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
     }
     map['to_failure'] = Variable<bool>(toFailure);
     map['is_partial'] = Variable<bool>(isPartial);
+    map['is_done'] = Variable<bool>(isDone);
     return map;
   }
 
@@ -1153,6 +1180,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
           : Value(weight),
       toFailure: Value(toFailure),
       isPartial: Value(isPartial),
+      isDone: Value(isDone),
     );
   }
 
@@ -1169,6 +1197,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
       weight: serializer.fromJson<double?>(json['weight']),
       toFailure: serializer.fromJson<bool>(json['toFailure']),
       isPartial: serializer.fromJson<bool>(json['isPartial']),
+      isDone: serializer.fromJson<bool>(json['isDone']),
     );
   }
   @override
@@ -1182,6 +1211,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
       'weight': serializer.toJson<double?>(weight),
       'toFailure': serializer.toJson<bool>(toFailure),
       'isPartial': serializer.toJson<bool>(isPartial),
+      'isDone': serializer.toJson<bool>(isDone),
     };
   }
 
@@ -1193,6 +1223,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
     Value<double?> weight = const Value.absent(),
     bool? toFailure,
     bool? isPartial,
+    bool? isDone,
   }) => WorkoutSet(
     id: id ?? this.id,
     exerciseId: exerciseId ?? this.exerciseId,
@@ -1201,6 +1232,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
     weight: weight.present ? weight.value : this.weight,
     toFailure: toFailure ?? this.toFailure,
     isPartial: isPartial ?? this.isPartial,
+    isDone: isDone ?? this.isDone,
   );
   WorkoutSet copyWithCompanion(SetsCompanion data) {
     return WorkoutSet(
@@ -1213,6 +1245,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
       weight: data.weight.present ? data.weight.value : this.weight,
       toFailure: data.toFailure.present ? data.toFailure.value : this.toFailure,
       isPartial: data.isPartial.present ? data.isPartial.value : this.isPartial,
+      isDone: data.isDone.present ? data.isDone.value : this.isDone,
     );
   }
 
@@ -1225,7 +1258,8 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
           ..write('reps: $reps, ')
           ..write('weight: $weight, ')
           ..write('toFailure: $toFailure, ')
-          ..write('isPartial: $isPartial')
+          ..write('isPartial: $isPartial, ')
+          ..write('isDone: $isDone')
           ..write(')'))
         .toString();
   }
@@ -1239,6 +1273,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
     weight,
     toFailure,
     isPartial,
+    isDone,
   );
   @override
   bool operator ==(Object other) =>
@@ -1250,7 +1285,8 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
           other.reps == this.reps &&
           other.weight == this.weight &&
           other.toFailure == this.toFailure &&
-          other.isPartial == this.isPartial);
+          other.isPartial == this.isPartial &&
+          other.isDone == this.isDone);
 }
 
 class SetsCompanion extends UpdateCompanion<WorkoutSet> {
@@ -1261,6 +1297,7 @@ class SetsCompanion extends UpdateCompanion<WorkoutSet> {
   final Value<double?> weight;
   final Value<bool> toFailure;
   final Value<bool> isPartial;
+  final Value<bool> isDone;
   const SetsCompanion({
     this.id = const Value.absent(),
     this.exerciseId = const Value.absent(),
@@ -1269,6 +1306,7 @@ class SetsCompanion extends UpdateCompanion<WorkoutSet> {
     this.weight = const Value.absent(),
     this.toFailure = const Value.absent(),
     this.isPartial = const Value.absent(),
+    this.isDone = const Value.absent(),
   });
   SetsCompanion.insert({
     this.id = const Value.absent(),
@@ -1278,6 +1316,7 @@ class SetsCompanion extends UpdateCompanion<WorkoutSet> {
     this.weight = const Value.absent(),
     this.toFailure = const Value.absent(),
     this.isPartial = const Value.absent(),
+    this.isDone = const Value.absent(),
   }) : exerciseId = Value(exerciseId),
        setNumber = Value(setNumber);
   static Insertable<WorkoutSet> custom({
@@ -1288,6 +1327,7 @@ class SetsCompanion extends UpdateCompanion<WorkoutSet> {
     Expression<double>? weight,
     Expression<bool>? toFailure,
     Expression<bool>? isPartial,
+    Expression<bool>? isDone,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1297,6 +1337,7 @@ class SetsCompanion extends UpdateCompanion<WorkoutSet> {
       if (weight != null) 'weight': weight,
       if (toFailure != null) 'to_failure': toFailure,
       if (isPartial != null) 'is_partial': isPartial,
+      if (isDone != null) 'is_done': isDone,
     });
   }
 
@@ -1308,6 +1349,7 @@ class SetsCompanion extends UpdateCompanion<WorkoutSet> {
     Value<double?>? weight,
     Value<bool>? toFailure,
     Value<bool>? isPartial,
+    Value<bool>? isDone,
   }) {
     return SetsCompanion(
       id: id ?? this.id,
@@ -1317,6 +1359,7 @@ class SetsCompanion extends UpdateCompanion<WorkoutSet> {
       weight: weight ?? this.weight,
       toFailure: toFailure ?? this.toFailure,
       isPartial: isPartial ?? this.isPartial,
+      isDone: isDone ?? this.isDone,
     );
   }
 
@@ -1344,6 +1387,9 @@ class SetsCompanion extends UpdateCompanion<WorkoutSet> {
     if (isPartial.present) {
       map['is_partial'] = Variable<bool>(isPartial.value);
     }
+    if (isDone.present) {
+      map['is_done'] = Variable<bool>(isDone.value);
+    }
     return map;
   }
 
@@ -1356,7 +1402,8 @@ class SetsCompanion extends UpdateCompanion<WorkoutSet> {
           ..write('reps: $reps, ')
           ..write('weight: $weight, ')
           ..write('toFailure: $toFailure, ')
-          ..write('isPartial: $isPartial')
+          ..write('isPartial: $isPartial, ')
+          ..write('isDone: $isDone')
           ..write(')'))
         .toString();
   }
@@ -2230,6 +2277,7 @@ typedef $$SetsTableCreateCompanionBuilder =
       Value<double?> weight,
       Value<bool> toFailure,
       Value<bool> isPartial,
+      Value<bool> isDone,
     });
 typedef $$SetsTableUpdateCompanionBuilder =
     SetsCompanion Function({
@@ -2240,6 +2288,7 @@ typedef $$SetsTableUpdateCompanionBuilder =
       Value<double?> weight,
       Value<bool> toFailure,
       Value<bool> isPartial,
+      Value<bool> isDone,
     });
 
 final class $$SetsTableReferences
@@ -2299,6 +2348,11 @@ class $$SetsTableFilterComposer extends Composer<_$AppDatabase, $SetsTable> {
 
   ColumnFilters<bool> get isPartial => $composableBuilder(
     column: $table.isPartial,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDone => $composableBuilder(
+    column: $table.isDone,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2364,6 +2418,11 @@ class $$SetsTableOrderingComposer extends Composer<_$AppDatabase, $SetsTable> {
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isDone => $composableBuilder(
+    column: $table.isDone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$ExercisesTableOrderingComposer get exerciseId {
     final $$ExercisesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -2414,6 +2473,9 @@ class $$SetsTableAnnotationComposer
 
   GeneratedColumn<bool> get isPartial =>
       $composableBuilder(column: $table.isPartial, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDone =>
+      $composableBuilder(column: $table.isDone, builder: (column) => column);
 
   $$ExercisesTableAnnotationComposer get exerciseId {
     final $$ExercisesTableAnnotationComposer composer = $composerBuilder(
@@ -2474,6 +2536,7 @@ class $$SetsTableTableManager
                 Value<double?> weight = const Value.absent(),
                 Value<bool> toFailure = const Value.absent(),
                 Value<bool> isPartial = const Value.absent(),
+                Value<bool> isDone = const Value.absent(),
               }) => SetsCompanion(
                 id: id,
                 exerciseId: exerciseId,
@@ -2482,6 +2545,7 @@ class $$SetsTableTableManager
                 weight: weight,
                 toFailure: toFailure,
                 isPartial: isPartial,
+                isDone: isDone,
               ),
           createCompanionCallback:
               ({
@@ -2492,6 +2556,7 @@ class $$SetsTableTableManager
                 Value<double?> weight = const Value.absent(),
                 Value<bool> toFailure = const Value.absent(),
                 Value<bool> isPartial = const Value.absent(),
+                Value<bool> isDone = const Value.absent(),
               }) => SetsCompanion.insert(
                 id: id,
                 exerciseId: exerciseId,
@@ -2500,6 +2565,7 @@ class $$SetsTableTableManager
                 weight: weight,
                 toFailure: toFailure,
                 isPartial: isPartial,
+                isDone: isDone,
               ),
           withReferenceMapper: (p0) => p0
               .map(

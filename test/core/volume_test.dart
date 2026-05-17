@@ -11,6 +11,7 @@ WorkoutSet _set({int? reps, double? weight, bool toFailure = false, bool isParti
     weight: weight,
     toFailure: toFailure,
     isPartial: isPartial,
+    isDone: false,
   );
 }
 

@@ -31,4 +31,5 @@ class Sets extends Table {
   RealColumn get weight => real().nullable()();
   BoolColumn get toFailure => boolean().withDefault(const Constant(false))();
   BoolColumn get isPartial => boolean().withDefault(const Constant(false))();
+  BoolColumn get isDone => boolean().withDefault(const Constant(false))();
 }
