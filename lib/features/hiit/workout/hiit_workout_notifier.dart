@@ -8,8 +8,8 @@ import 'hiit_workout_state.dart';
 
 class HiitWorkoutNotifier extends StateNotifier<HiitWorkoutState> {
   HiitWorkoutNotifier({required this.sessionId, required this.db})
-      : super(HiitWorkoutState.loading()),
-        _player = AudioPlayer();
+      : _player = AudioPlayer(),
+        super(HiitWorkoutState.loading());
 
   final int sessionId;
   final AppDatabase db;
