@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:workout_app/core/database/app_database.dart';
 import 'package:workout_app/core/muscle_group_detector.dart';
+import 'package:workout_app/core/theme/app_theme.dart';
 import 'package:workout_app/features/hiit/hiit_planning_content.dart';
 import 'package:workout_app/features/home/session_hero_card.dart';
 import 'package:workout_app/providers.dart';
@@ -104,10 +105,31 @@ class _StrengthContent extends ConsumerWidget {
         ),
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: OutlinedButton(
-              onPressed: () => _addExercise(context, ref, session.id),
-              child: const Text('+ Agregar ejercicio'),
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+            child: GestureDetector(
+              onTap: () => _addExercise(context, ref, session.id),
+              child: Container(
+                height: 52,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppTheme.fuerza),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add, color: AppTheme.fuerza, size: 18),
+                    SizedBox(width: 8),
+                    Text(
+                      'Agregar ejercicio',
+                      style: TextStyle(
+                        color: AppTheme.fuerza,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -167,18 +189,18 @@ class _MuscleGroupHeader extends StatelessWidget {
         children: [
           Text(
             label.toUpperCase(),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w700,
               letterSpacing: 1.2,
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
+              color: AppTheme.fuerza,
             ),
           ),
           const SizedBox(width: 8),
-          Expanded(
+          const Expanded(
             child: Divider(
               thickness: 0.5,
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+              color: Color(0x446BA8FF),
             ),
           ),
         ],
