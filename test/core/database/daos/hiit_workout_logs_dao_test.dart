@@ -78,4 +78,31 @@ void main() {
         await db.hiitWorkoutLogsDao.getExerciseLogsForWorkout(logId);
     expect(exLogs.length, 3);
   });
+
+  test('watchHiitActiveDays returns empty when no completed logs exist',
+      () async {
+    // Create a log but don't complete it
+    await db.hiitWorkoutLogsDao.createLog(sessionId);
+
+    final activeDays =
+        await db.hiitWorkoutLogsDao.watchHiitActiveDays().first;
+
+    expect(activeDays.isEmpty, true);
+  });
+
+  test('watchHiitActiveDays returns session date when log is completed',
+      () async {
+    final now = DateTime.now();
+    final normalizedDate = DateTime(now.year, now.month, now.day);
+
+    // Create and complete a log
+    final logId = await db.hiitWorkoutLogsDao.createLog(sessionId);
+    await db.hiitWorkoutLogsDao.completeLog(logId);
+
+    final activeDays =
+        await db.hiitWorkoutLogsDao.watchHiitActiveDays().first;
+
+    expect(activeDays.length, 1);
+    expect(activeDays.first, normalizedDate);
+  });
 }
