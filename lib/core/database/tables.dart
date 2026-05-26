@@ -12,6 +12,27 @@ class WorkoutSessions extends Table {
   IntColumn get id => integer().autoIncrement()();
   DateTimeColumn get date => dateTime()();
   TextColumn get notes => text().nullable()();
+  TextColumn get type => text().withDefault(const Constant('strength'))();
+}
+
+class HiitCircuits extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get sessionId => integer().references(WorkoutSessions, #id)();
+  TextColumn get letter => text()();
+  TextColumn get name => text()();
+  IntColumn get rounds => integer()();
+  IntColumn get restBetweenRoundsSec => integer()();
+  IntColumn get restBetweenExercisesSec => integer().nullable()();
+  IntColumn get orderIndex => integer()();
+}
+
+class HiitExercises extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get circuitId => integer().references(HiitCircuits, #id)();
+  TextColumn get name => text()();
+  TextColumn get type => text()();
+  IntColumn get value => integer()();
+  IntColumn get orderIndex => integer()();
 }
 
 class Exercises extends Table {
