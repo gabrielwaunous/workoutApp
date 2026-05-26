@@ -106,28 +106,32 @@ class _StrengthContent extends ConsumerWidget {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-            child: GestureDetector(
-              onTap: () => _addExercise(context, ref, session.id),
-              child: Container(
-                height: 52,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppTheme.fuerza),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.add, color: AppTheme.fuerza, size: 18),
-                    SizedBox(width: 8),
-                    Text(
-                      'Agregar ejercicio',
-                      style: TextStyle(
-                        color: AppTheme.fuerza,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
+            child: Semantics(
+              button: true,
+              label: 'Agregar ejercicio',
+              child: GestureDetector(
+                onTap: () => _addExercise(context, ref, session.id),
+                child: Container(
+                  height: 52,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppTheme.fuerza),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.add, color: AppTheme.fuerza, size: 18),
+                      SizedBox(width: 8),
+                      Text(
+                        'Agregar ejercicio',
+                        style: TextStyle(
+                          color: AppTheme.fuerza,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
