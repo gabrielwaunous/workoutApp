@@ -4,7 +4,7 @@ import '../tables.dart';
 
 part 'hiit_workout_logs_dao.g.dart';
 
-@DriftAccessor(tables: [HiitWorkoutLogs, HiitExerciseLogs])
+@DriftAccessor(tables: [HiitWorkoutLogs, HiitExerciseLogs, WorkoutSessions])
 class HiitWorkoutLogsDao extends DatabaseAccessor<AppDatabase>
     with _$HiitWorkoutLogsDaoMixin {
   HiitWorkoutLogsDao(super.db);
@@ -46,4 +46,16 @@ class HiitWorkoutLogsDao extends DatabaseAccessor<AppDatabase>
       (select(hiitExerciseLogs)
             ..where((t) => t.workoutLogId.equals(workoutLogId)))
           .get();
+
+  Stream<Set<DateTime>> watchHiitActiveDays() {
+    final q = select(workoutSessions)
+      ..where((s) => s.id.isInQuery(
+          selectOnly(hiitWorkoutLogs)
+            ..addColumns([hiitWorkoutLogs.sessionId])
+            ..where(hiitWorkoutLogs.completedAt.isNotNull())));
+    return q
+        .map((s) => DateTime(s.date.year, s.date.month, s.date.day))
+        .watch()
+        .map((list) => list.toSet());
+  }
 }

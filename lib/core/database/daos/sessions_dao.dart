@@ -1,11 +1,10 @@
-// lib/core/database/daos/sessions_dao.dart
 import 'package:drift/drift.dart';
 import '../app_database.dart';
 import '../tables.dart';
 
 part 'sessions_dao.g.dart';
 
-@DriftAccessor(tables: [WorkoutSessions])
+@DriftAccessor(tables: [WorkoutSessions, Exercises, Sets])
 class SessionsDao extends DatabaseAccessor<AppDatabase>
     with _$SessionsDaoMixin {
   SessionsDao(super.db);
@@ -28,7 +27,8 @@ class SessionsDao extends DatabaseAccessor<AppDatabase>
     final start = DateTime(monday.year, monday.month, monday.day);
     final end = start.add(const Duration(days: 7));
     return (select(workoutSessions)
-          ..where((t) => t.date.isBiggerOrEqualValue(start) &
+          ..where((t) =>
+              t.date.isBiggerOrEqualValue(start) &
               t.date.isSmallerThanValue(end)))
         .watch();
   }
@@ -37,7 +37,8 @@ class SessionsDao extends DatabaseAccessor<AppDatabase>
     final start = DateTime(monday.year, monday.month, monday.day);
     final end = start.add(const Duration(days: 7));
     return (select(workoutSessions)
-          ..where((t) => t.date.isBiggerOrEqualValue(start) &
+          ..where((t) =>
+              t.date.isBiggerOrEqualValue(start) &
               t.date.isSmallerThanValue(end)))
         .get();
   }
@@ -52,4 +53,20 @@ class SessionsDao extends DatabaseAccessor<AppDatabase>
   Future<void> updateType(int id, String type) =>
       (update(workoutSessions)..where((t) => t.id.equals(id)))
           .write(WorkoutSessionsCompanion(type: Value(type)));
+
+  Stream<List<WorkoutSession>> watchAllSessions() =>
+      select(workoutSessions).watch();
+
+  Stream<Set<DateTime>> watchStrengthActiveDays() {
+    final q = select(workoutSessions)
+      ..where((s) => s.id.isInQuery(
+          selectOnly(exercises)
+            ..addColumns([exercises.sessionId])
+            ..where(exercises.id.isInQuery(
+                selectOnly(sets)..addColumns([sets.exerciseId])))));
+    return q
+        .map((s) => DateTime(s.date.year, s.date.month, s.date.day))
+        .watch()
+        .map((list) => list.toSet());
+  }
 }
