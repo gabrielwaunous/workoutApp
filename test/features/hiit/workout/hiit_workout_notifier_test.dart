@@ -1,11 +1,34 @@
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:workout_app/core/database/app_database.dart';
 import 'package:workout_app/features/hiit/workout/hiit_workout_notifier.dart';
 import 'package:workout_app/features/hiit/workout/hiit_workout_state.dart';
 
 void main() {
+  setUpAll(() {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    // Mock wakelock_plus
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      const MethodChannel('dev.fluttercommunity.plus/wakelock'),
+      (_) async => null,
+    );
+    // Mock audioplayers global
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      const MethodChannel('xyz.luan/audioplayers'),
+      (_) async => 1,
+    );
+    // Mock audioplayers per-player channel (player id = 'default')
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      const MethodChannel('xyz.luan/audioplayers/events/default'),
+      (_) async => null,
+    );
+  });
+
   late AppDatabase db;
   late int sessionId;
 

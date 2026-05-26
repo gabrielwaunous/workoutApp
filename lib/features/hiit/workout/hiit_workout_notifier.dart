@@ -60,7 +60,11 @@ class HiitWorkoutNotifier extends StateNotifier<HiitWorkoutState> {
       return;
     }
     if (state.phase == WorkoutPhase.done) return;
-    _logAndAdvance();
+    if (state.phase == WorkoutPhase.exerciseWork) {
+      _logAndAdvance();
+    } else {
+      _advance();
+    }
   }
 
   void pause() {
@@ -94,7 +98,11 @@ class HiitWorkoutNotifier extends StateNotifier<HiitWorkoutState> {
     }
 
     if (remaining <= 0) {
-      _logAndAdvance();
+      if (state.phase == WorkoutPhase.exerciseWork) {
+        _logAndAdvance();
+      } else {
+        _advance();
+      }
     } else {
       state = state.copyWith(remainingSeconds: remaining);
     }
@@ -161,7 +169,7 @@ class HiitWorkoutNotifier extends StateNotifier<HiitWorkoutState> {
             startedAt: s.startedAt,
           );
         } else {
-          _completeDone();
+          unawaited(_completeDone());
         }
         break;
 
@@ -190,11 +198,11 @@ class HiitWorkoutNotifier extends StateNotifier<HiitWorkoutState> {
 
   Future<void> _completeDone() async {
     _timer?.cancel();
+    state = state.copyWith(phase: WorkoutPhase.done);
     await db.hiitWorkoutLogsDao.completeLog(state.workoutLogId);
     await WakelockPlus.disable();
     HapticFeedback.heavyImpact();
     await _player.play(AssetSource('sounds/beep_long.wav'));
-    state = state.copyWith(phase: WorkoutPhase.done);
   }
 
   int _seconds(HiitExercise ex) => ex.type == 'time' ? ex.value : 0;

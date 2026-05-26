@@ -54,7 +54,9 @@ class _RestLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final isRoundRest = workoutState.phase == WorkoutPhase.roundRest;
     final nextRound = workoutState.round + 1;
-    final nextEx = workoutState.currentExercises[0];
+    final nextEx = isRoundRest
+        ? workoutState.currentExercises[0]
+        : workoutState.currentExercises[workoutState.exerciseIndex + 1];
 
     return Column(
       children: [
