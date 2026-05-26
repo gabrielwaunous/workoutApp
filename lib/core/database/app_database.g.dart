@@ -335,8 +335,18 @@ class $WorkoutSessionsTable extends WorkoutSessions
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
-  List<GeneratedColumn> get $columns => [id, date, notes];
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('strength'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, date, notes, type];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -366,6 +376,12 @@ class $WorkoutSessionsTable extends WorkoutSessions
         notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
       );
     }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    }
     return context;
   }
 
@@ -387,6 +403,10 @@ class $WorkoutSessionsTable extends WorkoutSessions
         DriftSqlType.string,
         data['${effectivePrefix}notes'],
       ),
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      )!,
     );
   }
 
@@ -400,7 +420,13 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
   final int id;
   final DateTime date;
   final String? notes;
-  const WorkoutSession({required this.id, required this.date, this.notes});
+  final String type;
+  const WorkoutSession({
+    required this.id,
+    required this.date,
+    this.notes,
+    required this.type,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -409,6 +435,7 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
     }
+    map['type'] = Variable<String>(type);
     return map;
   }
 
@@ -419,6 +446,7 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
       notes: notes == null && nullToAbsent
           ? const Value.absent()
           : Value(notes),
+      type: Value(type),
     );
   }
 
@@ -431,6 +459,7 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
       id: serializer.fromJson<int>(json['id']),
       date: serializer.fromJson<DateTime>(json['date']),
       notes: serializer.fromJson<String?>(json['notes']),
+      type: serializer.fromJson<String>(json['type']),
     );
   }
   @override
@@ -440,6 +469,7 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
       'id': serializer.toJson<int>(id),
       'date': serializer.toJson<DateTime>(date),
       'notes': serializer.toJson<String?>(notes),
+      'type': serializer.toJson<String>(type),
     };
   }
 
@@ -447,16 +477,19 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
     int? id,
     DateTime? date,
     Value<String?> notes = const Value.absent(),
+    String? type,
   }) => WorkoutSession(
     id: id ?? this.id,
     date: date ?? this.date,
     notes: notes.present ? notes.value : this.notes,
+    type: type ?? this.type,
   );
   WorkoutSession copyWithCompanion(WorkoutSessionsCompanion data) {
     return WorkoutSession(
       id: data.id.present ? data.id.value : this.id,
       date: data.date.present ? data.date.value : this.date,
       notes: data.notes.present ? data.notes.value : this.notes,
+      type: data.type.present ? data.type.value : this.type,
     );
   }
 
@@ -465,45 +498,52 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
     return (StringBuffer('WorkoutSession(')
           ..write('id: $id, ')
           ..write('date: $date, ')
-          ..write('notes: $notes')
+          ..write('notes: $notes, ')
+          ..write('type: $type')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, date, notes);
+  int get hashCode => Object.hash(id, date, notes, type);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is WorkoutSession &&
           other.id == this.id &&
           other.date == this.date &&
-          other.notes == this.notes);
+          other.notes == this.notes &&
+          other.type == this.type);
 }
 
 class WorkoutSessionsCompanion extends UpdateCompanion<WorkoutSession> {
   final Value<int> id;
   final Value<DateTime> date;
   final Value<String?> notes;
+  final Value<String> type;
   const WorkoutSessionsCompanion({
     this.id = const Value.absent(),
     this.date = const Value.absent(),
     this.notes = const Value.absent(),
+    this.type = const Value.absent(),
   });
   WorkoutSessionsCompanion.insert({
     this.id = const Value.absent(),
     required DateTime date,
     this.notes = const Value.absent(),
+    this.type = const Value.absent(),
   }) : date = Value(date);
   static Insertable<WorkoutSession> custom({
     Expression<int>? id,
     Expression<DateTime>? date,
     Expression<String>? notes,
+    Expression<String>? type,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (date != null) 'date': date,
       if (notes != null) 'notes': notes,
+      if (type != null) 'type': type,
     });
   }
 
@@ -511,11 +551,13 @@ class WorkoutSessionsCompanion extends UpdateCompanion<WorkoutSession> {
     Value<int>? id,
     Value<DateTime>? date,
     Value<String?>? notes,
+    Value<String>? type,
   }) {
     return WorkoutSessionsCompanion(
       id: id ?? this.id,
       date: date ?? this.date,
       notes: notes ?? this.notes,
+      type: type ?? this.type,
     );
   }
 
@@ -531,6 +573,9 @@ class WorkoutSessionsCompanion extends UpdateCompanion<WorkoutSession> {
     if (notes.present) {
       map['notes'] = Variable<String>(notes.value);
     }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
     return map;
   }
 
@@ -539,7 +584,8 @@ class WorkoutSessionsCompanion extends UpdateCompanion<WorkoutSession> {
     return (StringBuffer('WorkoutSessionsCompanion(')
           ..write('id: $id, ')
           ..write('date: $date, ')
-          ..write('notes: $notes')
+          ..write('notes: $notes, ')
+          ..write('type: $type')
           ..write(')'))
         .toString();
   }
@@ -1463,6 +1509,932 @@ class SetsCompanion extends UpdateCompanion<WorkoutSet> {
   }
 }
 
+class $HiitCircuitsTable extends HiitCircuits
+    with TableInfo<$HiitCircuitsTable, HiitCircuit> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $HiitCircuitsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _sessionIdMeta = const VerificationMeta(
+    'sessionId',
+  );
+  @override
+  late final GeneratedColumn<int> sessionId = GeneratedColumn<int>(
+    'session_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES workout_sessions (id)',
+    ),
+  );
+  static const VerificationMeta _letterMeta = const VerificationMeta('letter');
+  @override
+  late final GeneratedColumn<String> letter = GeneratedColumn<String>(
+    'letter',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _roundsMeta = const VerificationMeta('rounds');
+  @override
+  late final GeneratedColumn<int> rounds = GeneratedColumn<int>(
+    'rounds',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _restBetweenRoundsSecMeta =
+      const VerificationMeta('restBetweenRoundsSec');
+  @override
+  late final GeneratedColumn<int> restBetweenRoundsSec = GeneratedColumn<int>(
+    'rest_between_rounds_sec',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _restBetweenExercisesSecMeta =
+      const VerificationMeta('restBetweenExercisesSec');
+  @override
+  late final GeneratedColumn<int> restBetweenExercisesSec =
+      GeneratedColumn<int>(
+        'rest_between_exercises_sec',
+        aliasedName,
+        true,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _orderIndexMeta = const VerificationMeta(
+    'orderIndex',
+  );
+  @override
+  late final GeneratedColumn<int> orderIndex = GeneratedColumn<int>(
+    'order_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    sessionId,
+    letter,
+    name,
+    rounds,
+    restBetweenRoundsSec,
+    restBetweenExercisesSec,
+    orderIndex,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'hiit_circuits';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<HiitCircuit> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('session_id')) {
+      context.handle(
+        _sessionIdMeta,
+        sessionId.isAcceptableOrUnknown(data['session_id']!, _sessionIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sessionIdMeta);
+    }
+    if (data.containsKey('letter')) {
+      context.handle(
+        _letterMeta,
+        letter.isAcceptableOrUnknown(data['letter']!, _letterMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_letterMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('rounds')) {
+      context.handle(
+        _roundsMeta,
+        rounds.isAcceptableOrUnknown(data['rounds']!, _roundsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_roundsMeta);
+    }
+    if (data.containsKey('rest_between_rounds_sec')) {
+      context.handle(
+        _restBetweenRoundsSecMeta,
+        restBetweenRoundsSec.isAcceptableOrUnknown(
+          data['rest_between_rounds_sec']!,
+          _restBetweenRoundsSecMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_restBetweenRoundsSecMeta);
+    }
+    if (data.containsKey('rest_between_exercises_sec')) {
+      context.handle(
+        _restBetweenExercisesSecMeta,
+        restBetweenExercisesSec.isAcceptableOrUnknown(
+          data['rest_between_exercises_sec']!,
+          _restBetweenExercisesSecMeta,
+        ),
+      );
+    }
+    if (data.containsKey('order_index')) {
+      context.handle(
+        _orderIndexMeta,
+        orderIndex.isAcceptableOrUnknown(data['order_index']!, _orderIndexMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_orderIndexMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  HiitCircuit map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return HiitCircuit(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      sessionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}session_id'],
+      )!,
+      letter: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}letter'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      rounds: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}rounds'],
+      )!,
+      restBetweenRoundsSec: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}rest_between_rounds_sec'],
+      )!,
+      restBetweenExercisesSec: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}rest_between_exercises_sec'],
+      ),
+      orderIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}order_index'],
+      )!,
+    );
+  }
+
+  @override
+  $HiitCircuitsTable createAlias(String alias) {
+    return $HiitCircuitsTable(attachedDatabase, alias);
+  }
+}
+
+class HiitCircuit extends DataClass implements Insertable<HiitCircuit> {
+  final int id;
+  final int sessionId;
+  final String letter;
+  final String name;
+  final int rounds;
+  final int restBetweenRoundsSec;
+  final int? restBetweenExercisesSec;
+  final int orderIndex;
+  const HiitCircuit({
+    required this.id,
+    required this.sessionId,
+    required this.letter,
+    required this.name,
+    required this.rounds,
+    required this.restBetweenRoundsSec,
+    this.restBetweenExercisesSec,
+    required this.orderIndex,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['session_id'] = Variable<int>(sessionId);
+    map['letter'] = Variable<String>(letter);
+    map['name'] = Variable<String>(name);
+    map['rounds'] = Variable<int>(rounds);
+    map['rest_between_rounds_sec'] = Variable<int>(restBetweenRoundsSec);
+    if (!nullToAbsent || restBetweenExercisesSec != null) {
+      map['rest_between_exercises_sec'] = Variable<int>(
+        restBetweenExercisesSec,
+      );
+    }
+    map['order_index'] = Variable<int>(orderIndex);
+    return map;
+  }
+
+  HiitCircuitsCompanion toCompanion(bool nullToAbsent) {
+    return HiitCircuitsCompanion(
+      id: Value(id),
+      sessionId: Value(sessionId),
+      letter: Value(letter),
+      name: Value(name),
+      rounds: Value(rounds),
+      restBetweenRoundsSec: Value(restBetweenRoundsSec),
+      restBetweenExercisesSec: restBetweenExercisesSec == null && nullToAbsent
+          ? const Value.absent()
+          : Value(restBetweenExercisesSec),
+      orderIndex: Value(orderIndex),
+    );
+  }
+
+  factory HiitCircuit.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return HiitCircuit(
+      id: serializer.fromJson<int>(json['id']),
+      sessionId: serializer.fromJson<int>(json['sessionId']),
+      letter: serializer.fromJson<String>(json['letter']),
+      name: serializer.fromJson<String>(json['name']),
+      rounds: serializer.fromJson<int>(json['rounds']),
+      restBetweenRoundsSec: serializer.fromJson<int>(
+        json['restBetweenRoundsSec'],
+      ),
+      restBetweenExercisesSec: serializer.fromJson<int?>(
+        json['restBetweenExercisesSec'],
+      ),
+      orderIndex: serializer.fromJson<int>(json['orderIndex']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'sessionId': serializer.toJson<int>(sessionId),
+      'letter': serializer.toJson<String>(letter),
+      'name': serializer.toJson<String>(name),
+      'rounds': serializer.toJson<int>(rounds),
+      'restBetweenRoundsSec': serializer.toJson<int>(restBetweenRoundsSec),
+      'restBetweenExercisesSec': serializer.toJson<int?>(
+        restBetweenExercisesSec,
+      ),
+      'orderIndex': serializer.toJson<int>(orderIndex),
+    };
+  }
+
+  HiitCircuit copyWith({
+    int? id,
+    int? sessionId,
+    String? letter,
+    String? name,
+    int? rounds,
+    int? restBetweenRoundsSec,
+    Value<int?> restBetweenExercisesSec = const Value.absent(),
+    int? orderIndex,
+  }) => HiitCircuit(
+    id: id ?? this.id,
+    sessionId: sessionId ?? this.sessionId,
+    letter: letter ?? this.letter,
+    name: name ?? this.name,
+    rounds: rounds ?? this.rounds,
+    restBetweenRoundsSec: restBetweenRoundsSec ?? this.restBetweenRoundsSec,
+    restBetweenExercisesSec: restBetweenExercisesSec.present
+        ? restBetweenExercisesSec.value
+        : this.restBetweenExercisesSec,
+    orderIndex: orderIndex ?? this.orderIndex,
+  );
+  HiitCircuit copyWithCompanion(HiitCircuitsCompanion data) {
+    return HiitCircuit(
+      id: data.id.present ? data.id.value : this.id,
+      sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
+      letter: data.letter.present ? data.letter.value : this.letter,
+      name: data.name.present ? data.name.value : this.name,
+      rounds: data.rounds.present ? data.rounds.value : this.rounds,
+      restBetweenRoundsSec: data.restBetweenRoundsSec.present
+          ? data.restBetweenRoundsSec.value
+          : this.restBetweenRoundsSec,
+      restBetweenExercisesSec: data.restBetweenExercisesSec.present
+          ? data.restBetweenExercisesSec.value
+          : this.restBetweenExercisesSec,
+      orderIndex: data.orderIndex.present
+          ? data.orderIndex.value
+          : this.orderIndex,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HiitCircuit(')
+          ..write('id: $id, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('letter: $letter, ')
+          ..write('name: $name, ')
+          ..write('rounds: $rounds, ')
+          ..write('restBetweenRoundsSec: $restBetweenRoundsSec, ')
+          ..write('restBetweenExercisesSec: $restBetweenExercisesSec, ')
+          ..write('orderIndex: $orderIndex')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    sessionId,
+    letter,
+    name,
+    rounds,
+    restBetweenRoundsSec,
+    restBetweenExercisesSec,
+    orderIndex,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is HiitCircuit &&
+          other.id == this.id &&
+          other.sessionId == this.sessionId &&
+          other.letter == this.letter &&
+          other.name == this.name &&
+          other.rounds == this.rounds &&
+          other.restBetweenRoundsSec == this.restBetweenRoundsSec &&
+          other.restBetweenExercisesSec == this.restBetweenExercisesSec &&
+          other.orderIndex == this.orderIndex);
+}
+
+class HiitCircuitsCompanion extends UpdateCompanion<HiitCircuit> {
+  final Value<int> id;
+  final Value<int> sessionId;
+  final Value<String> letter;
+  final Value<String> name;
+  final Value<int> rounds;
+  final Value<int> restBetweenRoundsSec;
+  final Value<int?> restBetweenExercisesSec;
+  final Value<int> orderIndex;
+  const HiitCircuitsCompanion({
+    this.id = const Value.absent(),
+    this.sessionId = const Value.absent(),
+    this.letter = const Value.absent(),
+    this.name = const Value.absent(),
+    this.rounds = const Value.absent(),
+    this.restBetweenRoundsSec = const Value.absent(),
+    this.restBetweenExercisesSec = const Value.absent(),
+    this.orderIndex = const Value.absent(),
+  });
+  HiitCircuitsCompanion.insert({
+    this.id = const Value.absent(),
+    required int sessionId,
+    required String letter,
+    required String name,
+    required int rounds,
+    required int restBetweenRoundsSec,
+    this.restBetweenExercisesSec = const Value.absent(),
+    required int orderIndex,
+  }) : sessionId = Value(sessionId),
+       letter = Value(letter),
+       name = Value(name),
+       rounds = Value(rounds),
+       restBetweenRoundsSec = Value(restBetweenRoundsSec),
+       orderIndex = Value(orderIndex);
+  static Insertable<HiitCircuit> custom({
+    Expression<int>? id,
+    Expression<int>? sessionId,
+    Expression<String>? letter,
+    Expression<String>? name,
+    Expression<int>? rounds,
+    Expression<int>? restBetweenRoundsSec,
+    Expression<int>? restBetweenExercisesSec,
+    Expression<int>? orderIndex,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (sessionId != null) 'session_id': sessionId,
+      if (letter != null) 'letter': letter,
+      if (name != null) 'name': name,
+      if (rounds != null) 'rounds': rounds,
+      if (restBetweenRoundsSec != null)
+        'rest_between_rounds_sec': restBetweenRoundsSec,
+      if (restBetweenExercisesSec != null)
+        'rest_between_exercises_sec': restBetweenExercisesSec,
+      if (orderIndex != null) 'order_index': orderIndex,
+    });
+  }
+
+  HiitCircuitsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? sessionId,
+    Value<String>? letter,
+    Value<String>? name,
+    Value<int>? rounds,
+    Value<int>? restBetweenRoundsSec,
+    Value<int?>? restBetweenExercisesSec,
+    Value<int>? orderIndex,
+  }) {
+    return HiitCircuitsCompanion(
+      id: id ?? this.id,
+      sessionId: sessionId ?? this.sessionId,
+      letter: letter ?? this.letter,
+      name: name ?? this.name,
+      rounds: rounds ?? this.rounds,
+      restBetweenRoundsSec: restBetweenRoundsSec ?? this.restBetweenRoundsSec,
+      restBetweenExercisesSec:
+          restBetweenExercisesSec ?? this.restBetweenExercisesSec,
+      orderIndex: orderIndex ?? this.orderIndex,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (sessionId.present) {
+      map['session_id'] = Variable<int>(sessionId.value);
+    }
+    if (letter.present) {
+      map['letter'] = Variable<String>(letter.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (rounds.present) {
+      map['rounds'] = Variable<int>(rounds.value);
+    }
+    if (restBetweenRoundsSec.present) {
+      map['rest_between_rounds_sec'] = Variable<int>(
+        restBetweenRoundsSec.value,
+      );
+    }
+    if (restBetweenExercisesSec.present) {
+      map['rest_between_exercises_sec'] = Variable<int>(
+        restBetweenExercisesSec.value,
+      );
+    }
+    if (orderIndex.present) {
+      map['order_index'] = Variable<int>(orderIndex.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HiitCircuitsCompanion(')
+          ..write('id: $id, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('letter: $letter, ')
+          ..write('name: $name, ')
+          ..write('rounds: $rounds, ')
+          ..write('restBetweenRoundsSec: $restBetweenRoundsSec, ')
+          ..write('restBetweenExercisesSec: $restBetweenExercisesSec, ')
+          ..write('orderIndex: $orderIndex')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $HiitExercisesTable extends HiitExercises
+    with TableInfo<$HiitExercisesTable, HiitExercise> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $HiitExercisesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _circuitIdMeta = const VerificationMeta(
+    'circuitId',
+  );
+  @override
+  late final GeneratedColumn<int> circuitId = GeneratedColumn<int>(
+    'circuit_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES hiit_circuits (id)',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+    'type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
+  @override
+  late final GeneratedColumn<int> value = GeneratedColumn<int>(
+    'value',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _orderIndexMeta = const VerificationMeta(
+    'orderIndex',
+  );
+  @override
+  late final GeneratedColumn<int> orderIndex = GeneratedColumn<int>(
+    'order_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    circuitId,
+    name,
+    type,
+    value,
+    orderIndex,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'hiit_exercises';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<HiitExercise> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('circuit_id')) {
+      context.handle(
+        _circuitIdMeta,
+        circuitId.isAcceptableOrUnknown(data['circuit_id']!, _circuitIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_circuitIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+        _typeMeta,
+        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_typeMeta);
+    }
+    if (data.containsKey('value')) {
+      context.handle(
+        _valueMeta,
+        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_valueMeta);
+    }
+    if (data.containsKey('order_index')) {
+      context.handle(
+        _orderIndexMeta,
+        orderIndex.isAcceptableOrUnknown(data['order_index']!, _orderIndexMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_orderIndexMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  HiitExercise map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return HiitExercise(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      circuitId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}circuit_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      type: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}type'],
+      )!,
+      value: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}value'],
+      )!,
+      orderIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}order_index'],
+      )!,
+    );
+  }
+
+  @override
+  $HiitExercisesTable createAlias(String alias) {
+    return $HiitExercisesTable(attachedDatabase, alias);
+  }
+}
+
+class HiitExercise extends DataClass implements Insertable<HiitExercise> {
+  final int id;
+  final int circuitId;
+  final String name;
+  final String type;
+  final int value;
+  final int orderIndex;
+  const HiitExercise({
+    required this.id,
+    required this.circuitId,
+    required this.name,
+    required this.type,
+    required this.value,
+    required this.orderIndex,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['circuit_id'] = Variable<int>(circuitId);
+    map['name'] = Variable<String>(name);
+    map['type'] = Variable<String>(type);
+    map['value'] = Variable<int>(value);
+    map['order_index'] = Variable<int>(orderIndex);
+    return map;
+  }
+
+  HiitExercisesCompanion toCompanion(bool nullToAbsent) {
+    return HiitExercisesCompanion(
+      id: Value(id),
+      circuitId: Value(circuitId),
+      name: Value(name),
+      type: Value(type),
+      value: Value(value),
+      orderIndex: Value(orderIndex),
+    );
+  }
+
+  factory HiitExercise.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return HiitExercise(
+      id: serializer.fromJson<int>(json['id']),
+      circuitId: serializer.fromJson<int>(json['circuitId']),
+      name: serializer.fromJson<String>(json['name']),
+      type: serializer.fromJson<String>(json['type']),
+      value: serializer.fromJson<int>(json['value']),
+      orderIndex: serializer.fromJson<int>(json['orderIndex']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'circuitId': serializer.toJson<int>(circuitId),
+      'name': serializer.toJson<String>(name),
+      'type': serializer.toJson<String>(type),
+      'value': serializer.toJson<int>(value),
+      'orderIndex': serializer.toJson<int>(orderIndex),
+    };
+  }
+
+  HiitExercise copyWith({
+    int? id,
+    int? circuitId,
+    String? name,
+    String? type,
+    int? value,
+    int? orderIndex,
+  }) => HiitExercise(
+    id: id ?? this.id,
+    circuitId: circuitId ?? this.circuitId,
+    name: name ?? this.name,
+    type: type ?? this.type,
+    value: value ?? this.value,
+    orderIndex: orderIndex ?? this.orderIndex,
+  );
+  HiitExercise copyWithCompanion(HiitExercisesCompanion data) {
+    return HiitExercise(
+      id: data.id.present ? data.id.value : this.id,
+      circuitId: data.circuitId.present ? data.circuitId.value : this.circuitId,
+      name: data.name.present ? data.name.value : this.name,
+      type: data.type.present ? data.type.value : this.type,
+      value: data.value.present ? data.value.value : this.value,
+      orderIndex: data.orderIndex.present
+          ? data.orderIndex.value
+          : this.orderIndex,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HiitExercise(')
+          ..write('id: $id, ')
+          ..write('circuitId: $circuitId, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('value: $value, ')
+          ..write('orderIndex: $orderIndex')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, circuitId, name, type, value, orderIndex);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is HiitExercise &&
+          other.id == this.id &&
+          other.circuitId == this.circuitId &&
+          other.name == this.name &&
+          other.type == this.type &&
+          other.value == this.value &&
+          other.orderIndex == this.orderIndex);
+}
+
+class HiitExercisesCompanion extends UpdateCompanion<HiitExercise> {
+  final Value<int> id;
+  final Value<int> circuitId;
+  final Value<String> name;
+  final Value<String> type;
+  final Value<int> value;
+  final Value<int> orderIndex;
+  const HiitExercisesCompanion({
+    this.id = const Value.absent(),
+    this.circuitId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.value = const Value.absent(),
+    this.orderIndex = const Value.absent(),
+  });
+  HiitExercisesCompanion.insert({
+    this.id = const Value.absent(),
+    required int circuitId,
+    required String name,
+    required String type,
+    required int value,
+    required int orderIndex,
+  }) : circuitId = Value(circuitId),
+       name = Value(name),
+       type = Value(type),
+       value = Value(value),
+       orderIndex = Value(orderIndex);
+  static Insertable<HiitExercise> custom({
+    Expression<int>? id,
+    Expression<int>? circuitId,
+    Expression<String>? name,
+    Expression<String>? type,
+    Expression<int>? value,
+    Expression<int>? orderIndex,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (circuitId != null) 'circuit_id': circuitId,
+      if (name != null) 'name': name,
+      if (type != null) 'type': type,
+      if (value != null) 'value': value,
+      if (orderIndex != null) 'order_index': orderIndex,
+    });
+  }
+
+  HiitExercisesCompanion copyWith({
+    Value<int>? id,
+    Value<int>? circuitId,
+    Value<String>? name,
+    Value<String>? type,
+    Value<int>? value,
+    Value<int>? orderIndex,
+  }) {
+    return HiitExercisesCompanion(
+      id: id ?? this.id,
+      circuitId: circuitId ?? this.circuitId,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      value: value ?? this.value,
+      orderIndex: orderIndex ?? this.orderIndex,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (circuitId.present) {
+      map['circuit_id'] = Variable<int>(circuitId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (value.present) {
+      map['value'] = Variable<int>(value.value);
+    }
+    if (orderIndex.present) {
+      map['order_index'] = Variable<int>(orderIndex.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HiitExercisesCompanion(')
+          ..write('id: $id, ')
+          ..write('circuitId: $circuitId, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('value: $value, ')
+          ..write('orderIndex: $orderIndex')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -1472,10 +2444,18 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final $ExercisesTable exercises = $ExercisesTable(this);
   late final $SetsTable sets = $SetsTable(this);
+  late final $HiitCircuitsTable hiitCircuits = $HiitCircuitsTable(this);
+  late final $HiitExercisesTable hiitExercises = $HiitExercisesTable(this);
   late final RoutinesDao routinesDao = RoutinesDao(this as AppDatabase);
   late final SessionsDao sessionsDao = SessionsDao(this as AppDatabase);
   late final ExercisesDao exercisesDao = ExercisesDao(this as AppDatabase);
   late final SetsDao setsDao = SetsDao(this as AppDatabase);
+  late final HiitCircuitsDao hiitCircuitsDao = HiitCircuitsDao(
+    this as AppDatabase,
+  );
+  late final HiitExercisesDao hiitExercisesDao = HiitExercisesDao(
+    this as AppDatabase,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1485,6 +2465,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     workoutSessions,
     exercises,
     sets,
+    hiitCircuits,
+    hiitExercises,
   ];
 }
 
@@ -1662,12 +2644,14 @@ typedef $$WorkoutSessionsTableCreateCompanionBuilder =
       Value<int> id,
       required DateTime date,
       Value<String?> notes,
+      Value<String> type,
     });
 typedef $$WorkoutSessionsTableUpdateCompanionBuilder =
     WorkoutSessionsCompanion Function({
       Value<int> id,
       Value<DateTime> date,
       Value<String?> notes,
+      Value<String> type,
     });
 
 final class $$WorkoutSessionsTableReferences
@@ -1699,6 +2683,27 @@ final class $$WorkoutSessionsTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$HiitCircuitsTable, List<HiitCircuit>>
+  _hiitCircuitsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.hiitCircuits,
+    aliasName: $_aliasNameGenerator(
+      db.workoutSessions.id,
+      db.hiitCircuits.sessionId,
+    ),
+  );
+
+  $$HiitCircuitsTableProcessedTableManager get hiitCircuitsRefs {
+    final manager = $$HiitCircuitsTableTableManager(
+      $_db,
+      $_db.hiitCircuits,
+    ).filter((f) => f.sessionId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_hiitCircuitsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$WorkoutSessionsTableFilterComposer
@@ -1725,6 +2730,11 @@ class $$WorkoutSessionsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
+
   Expression<bool> exercisesRefs(
     Expression<bool> Function($$ExercisesTableFilterComposer f) f,
   ) {
@@ -1741,6 +2751,31 @@ class $$WorkoutSessionsTableFilterComposer
           }) => $$ExercisesTableFilterComposer(
             $db: $db,
             $table: $db.exercises,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> hiitCircuitsRefs(
+    Expression<bool> Function($$HiitCircuitsTableFilterComposer f) f,
+  ) {
+    final $$HiitCircuitsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.hiitCircuits,
+      getReferencedColumn: (t) => t.sessionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitCircuitsTableFilterComposer(
+            $db: $db,
+            $table: $db.hiitCircuits,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -1774,6 +2809,11 @@ class $$WorkoutSessionsTableOrderingComposer
     column: $table.notes,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$WorkoutSessionsTableAnnotationComposer
@@ -1793,6 +2833,9 @@ class $$WorkoutSessionsTableAnnotationComposer
 
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
 
   Expression<T> exercisesRefs<T extends Object>(
     Expression<T> Function($$ExercisesTableAnnotationComposer a) f,
@@ -1818,6 +2861,31 @@ class $$WorkoutSessionsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> hiitCircuitsRefs<T extends Object>(
+    Expression<T> Function($$HiitCircuitsTableAnnotationComposer a) f,
+  ) {
+    final $$HiitCircuitsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.hiitCircuits,
+      getReferencedColumn: (t) => t.sessionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitCircuitsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.hiitCircuits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$WorkoutSessionsTableTableManager
@@ -1833,7 +2901,7 @@ class $$WorkoutSessionsTableTableManager
           $$WorkoutSessionsTableUpdateCompanionBuilder,
           (WorkoutSession, $$WorkoutSessionsTableReferences),
           WorkoutSession,
-          PrefetchHooks Function({bool exercisesRefs})
+          PrefetchHooks Function({bool exercisesRefs, bool hiitCircuitsRefs})
         > {
   $$WorkoutSessionsTableTableManager(
     _$AppDatabase db,
@@ -1853,16 +2921,24 @@ class $$WorkoutSessionsTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
-              }) => WorkoutSessionsCompanion(id: id, date: date, notes: notes),
+                Value<String> type = const Value.absent(),
+              }) => WorkoutSessionsCompanion(
+                id: id,
+                date: date,
+                notes: notes,
+                type: type,
+              ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required DateTime date,
                 Value<String?> notes = const Value.absent(),
+                Value<String> type = const Value.absent(),
               }) => WorkoutSessionsCompanion.insert(
                 id: id,
                 date: date,
                 notes: notes,
+                type: type,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -1872,36 +2948,63 @@ class $$WorkoutSessionsTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({exercisesRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (exercisesRefs) db.exercises],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (exercisesRefs)
-                    await $_getPrefetchedData<
-                      WorkoutSession,
-                      $WorkoutSessionsTable,
-                      Exercise
-                    >(
-                      currentTable: table,
-                      referencedTable: $$WorkoutSessionsTableReferences
-                          ._exercisesRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$WorkoutSessionsTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).exercisesRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.sessionId == item.id),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({exercisesRefs = false, hiitCircuitsRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (exercisesRefs) db.exercises,
+                    if (hiitCircuitsRefs) db.hiitCircuits,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (exercisesRefs)
+                        await $_getPrefetchedData<
+                          WorkoutSession,
+                          $WorkoutSessionsTable,
+                          Exercise
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorkoutSessionsTableReferences
+                              ._exercisesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorkoutSessionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).exercisesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.sessionId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (hiitCircuitsRefs)
+                        await $_getPrefetchedData<
+                          WorkoutSession,
+                          $WorkoutSessionsTable,
+                          HiitCircuit
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorkoutSessionsTableReferences
+                              ._hiitCircuitsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorkoutSessionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).hiitCircuitsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.sessionId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -1918,7 +3021,7 @@ typedef $$WorkoutSessionsTableProcessedTableManager =
       $$WorkoutSessionsTableUpdateCompanionBuilder,
       (WorkoutSession, $$WorkoutSessionsTableReferences),
       WorkoutSession,
-      PrefetchHooks Function({bool exercisesRefs})
+      PrefetchHooks Function({bool exercisesRefs, bool hiitCircuitsRefs})
     >;
 typedef $$ExercisesTableCreateCompanionBuilder =
     ExercisesCompanion Function({
@@ -2707,6 +3810,818 @@ typedef $$SetsTableProcessedTableManager =
       WorkoutSet,
       PrefetchHooks Function({bool exerciseId})
     >;
+typedef $$HiitCircuitsTableCreateCompanionBuilder =
+    HiitCircuitsCompanion Function({
+      Value<int> id,
+      required int sessionId,
+      required String letter,
+      required String name,
+      required int rounds,
+      required int restBetweenRoundsSec,
+      Value<int?> restBetweenExercisesSec,
+      required int orderIndex,
+    });
+typedef $$HiitCircuitsTableUpdateCompanionBuilder =
+    HiitCircuitsCompanion Function({
+      Value<int> id,
+      Value<int> sessionId,
+      Value<String> letter,
+      Value<String> name,
+      Value<int> rounds,
+      Value<int> restBetweenRoundsSec,
+      Value<int?> restBetweenExercisesSec,
+      Value<int> orderIndex,
+    });
+
+final class $$HiitCircuitsTableReferences
+    extends BaseReferences<_$AppDatabase, $HiitCircuitsTable, HiitCircuit> {
+  $$HiitCircuitsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $WorkoutSessionsTable _sessionIdTable(_$AppDatabase db) =>
+      db.workoutSessions.createAlias(
+        $_aliasNameGenerator(db.hiitCircuits.sessionId, db.workoutSessions.id),
+      );
+
+  $$WorkoutSessionsTableProcessedTableManager get sessionId {
+    final $_column = $_itemColumn<int>('session_id')!;
+
+    final manager = $$WorkoutSessionsTableTableManager(
+      $_db,
+      $_db.workoutSessions,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_sessionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$HiitExercisesTable, List<HiitExercise>>
+  _hiitExercisesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.hiitExercises,
+    aliasName: $_aliasNameGenerator(
+      db.hiitCircuits.id,
+      db.hiitExercises.circuitId,
+    ),
+  );
+
+  $$HiitExercisesTableProcessedTableManager get hiitExercisesRefs {
+    final manager = $$HiitExercisesTableTableManager(
+      $_db,
+      $_db.hiitExercises,
+    ).filter((f) => f.circuitId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_hiitExercisesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$HiitCircuitsTableFilterComposer
+    extends Composer<_$AppDatabase, $HiitCircuitsTable> {
+  $$HiitCircuitsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get letter => $composableBuilder(
+    column: $table.letter,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get rounds => $composableBuilder(
+    column: $table.rounds,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get restBetweenRoundsSec => $composableBuilder(
+    column: $table.restBetweenRoundsSec,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get restBetweenExercisesSec => $composableBuilder(
+    column: $table.restBetweenExercisesSec,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get orderIndex => $composableBuilder(
+    column: $table.orderIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$WorkoutSessionsTableFilterComposer get sessionId {
+    final $$WorkoutSessionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.sessionId,
+      referencedTable: $db.workoutSessions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkoutSessionsTableFilterComposer(
+            $db: $db,
+            $table: $db.workoutSessions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> hiitExercisesRefs(
+    Expression<bool> Function($$HiitExercisesTableFilterComposer f) f,
+  ) {
+    final $$HiitExercisesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.hiitExercises,
+      getReferencedColumn: (t) => t.circuitId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitExercisesTableFilterComposer(
+            $db: $db,
+            $table: $db.hiitExercises,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$HiitCircuitsTableOrderingComposer
+    extends Composer<_$AppDatabase, $HiitCircuitsTable> {
+  $$HiitCircuitsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get letter => $composableBuilder(
+    column: $table.letter,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get rounds => $composableBuilder(
+    column: $table.rounds,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get restBetweenRoundsSec => $composableBuilder(
+    column: $table.restBetweenRoundsSec,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get restBetweenExercisesSec => $composableBuilder(
+    column: $table.restBetweenExercisesSec,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get orderIndex => $composableBuilder(
+    column: $table.orderIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$WorkoutSessionsTableOrderingComposer get sessionId {
+    final $$WorkoutSessionsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.sessionId,
+      referencedTable: $db.workoutSessions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkoutSessionsTableOrderingComposer(
+            $db: $db,
+            $table: $db.workoutSessions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$HiitCircuitsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $HiitCircuitsTable> {
+  $$HiitCircuitsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get letter =>
+      $composableBuilder(column: $table.letter, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get rounds =>
+      $composableBuilder(column: $table.rounds, builder: (column) => column);
+
+  GeneratedColumn<int> get restBetweenRoundsSec => $composableBuilder(
+    column: $table.restBetweenRoundsSec,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get restBetweenExercisesSec => $composableBuilder(
+    column: $table.restBetweenExercisesSec,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get orderIndex => $composableBuilder(
+    column: $table.orderIndex,
+    builder: (column) => column,
+  );
+
+  $$WorkoutSessionsTableAnnotationComposer get sessionId {
+    final $$WorkoutSessionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.sessionId,
+      referencedTable: $db.workoutSessions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkoutSessionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.workoutSessions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> hiitExercisesRefs<T extends Object>(
+    Expression<T> Function($$HiitExercisesTableAnnotationComposer a) f,
+  ) {
+    final $$HiitExercisesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.hiitExercises,
+      getReferencedColumn: (t) => t.circuitId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitExercisesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.hiitExercises,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$HiitCircuitsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $HiitCircuitsTable,
+          HiitCircuit,
+          $$HiitCircuitsTableFilterComposer,
+          $$HiitCircuitsTableOrderingComposer,
+          $$HiitCircuitsTableAnnotationComposer,
+          $$HiitCircuitsTableCreateCompanionBuilder,
+          $$HiitCircuitsTableUpdateCompanionBuilder,
+          (HiitCircuit, $$HiitCircuitsTableReferences),
+          HiitCircuit,
+          PrefetchHooks Function({bool sessionId, bool hiitExercisesRefs})
+        > {
+  $$HiitCircuitsTableTableManager(_$AppDatabase db, $HiitCircuitsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$HiitCircuitsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$HiitCircuitsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$HiitCircuitsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> sessionId = const Value.absent(),
+                Value<String> letter = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<int> rounds = const Value.absent(),
+                Value<int> restBetweenRoundsSec = const Value.absent(),
+                Value<int?> restBetweenExercisesSec = const Value.absent(),
+                Value<int> orderIndex = const Value.absent(),
+              }) => HiitCircuitsCompanion(
+                id: id,
+                sessionId: sessionId,
+                letter: letter,
+                name: name,
+                rounds: rounds,
+                restBetweenRoundsSec: restBetweenRoundsSec,
+                restBetweenExercisesSec: restBetweenExercisesSec,
+                orderIndex: orderIndex,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int sessionId,
+                required String letter,
+                required String name,
+                required int rounds,
+                required int restBetweenRoundsSec,
+                Value<int?> restBetweenExercisesSec = const Value.absent(),
+                required int orderIndex,
+              }) => HiitCircuitsCompanion.insert(
+                id: id,
+                sessionId: sessionId,
+                letter: letter,
+                name: name,
+                rounds: rounds,
+                restBetweenRoundsSec: restBetweenRoundsSec,
+                restBetweenExercisesSec: restBetweenExercisesSec,
+                orderIndex: orderIndex,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$HiitCircuitsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({sessionId = false, hiitExercisesRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (hiitExercisesRefs) db.hiitExercises,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (sessionId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.sessionId,
+                                    referencedTable:
+                                        $$HiitCircuitsTableReferences
+                                            ._sessionIdTable(db),
+                                    referencedColumn:
+                                        $$HiitCircuitsTableReferences
+                                            ._sessionIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (hiitExercisesRefs)
+                        await $_getPrefetchedData<
+                          HiitCircuit,
+                          $HiitCircuitsTable,
+                          HiitExercise
+                        >(
+                          currentTable: table,
+                          referencedTable: $$HiitCircuitsTableReferences
+                              ._hiitExercisesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$HiitCircuitsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).hiitExercisesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.circuitId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$HiitCircuitsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $HiitCircuitsTable,
+      HiitCircuit,
+      $$HiitCircuitsTableFilterComposer,
+      $$HiitCircuitsTableOrderingComposer,
+      $$HiitCircuitsTableAnnotationComposer,
+      $$HiitCircuitsTableCreateCompanionBuilder,
+      $$HiitCircuitsTableUpdateCompanionBuilder,
+      (HiitCircuit, $$HiitCircuitsTableReferences),
+      HiitCircuit,
+      PrefetchHooks Function({bool sessionId, bool hiitExercisesRefs})
+    >;
+typedef $$HiitExercisesTableCreateCompanionBuilder =
+    HiitExercisesCompanion Function({
+      Value<int> id,
+      required int circuitId,
+      required String name,
+      required String type,
+      required int value,
+      required int orderIndex,
+    });
+typedef $$HiitExercisesTableUpdateCompanionBuilder =
+    HiitExercisesCompanion Function({
+      Value<int> id,
+      Value<int> circuitId,
+      Value<String> name,
+      Value<String> type,
+      Value<int> value,
+      Value<int> orderIndex,
+    });
+
+final class $$HiitExercisesTableReferences
+    extends BaseReferences<_$AppDatabase, $HiitExercisesTable, HiitExercise> {
+  $$HiitExercisesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $HiitCircuitsTable _circuitIdTable(_$AppDatabase db) =>
+      db.hiitCircuits.createAlias(
+        $_aliasNameGenerator(db.hiitExercises.circuitId, db.hiitCircuits.id),
+      );
+
+  $$HiitCircuitsTableProcessedTableManager get circuitId {
+    final $_column = $_itemColumn<int>('circuit_id')!;
+
+    final manager = $$HiitCircuitsTableTableManager(
+      $_db,
+      $_db.hiitCircuits,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_circuitIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$HiitExercisesTableFilterComposer
+    extends Composer<_$AppDatabase, $HiitExercisesTable> {
+  $$HiitExercisesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get orderIndex => $composableBuilder(
+    column: $table.orderIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$HiitCircuitsTableFilterComposer get circuitId {
+    final $$HiitCircuitsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.circuitId,
+      referencedTable: $db.hiitCircuits,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitCircuitsTableFilterComposer(
+            $db: $db,
+            $table: $db.hiitCircuits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$HiitExercisesTableOrderingComposer
+    extends Composer<_$AppDatabase, $HiitExercisesTable> {
+  $$HiitExercisesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get orderIndex => $composableBuilder(
+    column: $table.orderIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$HiitCircuitsTableOrderingComposer get circuitId {
+    final $$HiitCircuitsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.circuitId,
+      referencedTable: $db.hiitCircuits,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitCircuitsTableOrderingComposer(
+            $db: $db,
+            $table: $db.hiitCircuits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$HiitExercisesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $HiitExercisesTable> {
+  $$HiitExercisesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<int> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
+
+  GeneratedColumn<int> get orderIndex => $composableBuilder(
+    column: $table.orderIndex,
+    builder: (column) => column,
+  );
+
+  $$HiitCircuitsTableAnnotationComposer get circuitId {
+    final $$HiitCircuitsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.circuitId,
+      referencedTable: $db.hiitCircuits,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitCircuitsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.hiitCircuits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$HiitExercisesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $HiitExercisesTable,
+          HiitExercise,
+          $$HiitExercisesTableFilterComposer,
+          $$HiitExercisesTableOrderingComposer,
+          $$HiitExercisesTableAnnotationComposer,
+          $$HiitExercisesTableCreateCompanionBuilder,
+          $$HiitExercisesTableUpdateCompanionBuilder,
+          (HiitExercise, $$HiitExercisesTableReferences),
+          HiitExercise,
+          PrefetchHooks Function({bool circuitId})
+        > {
+  $$HiitExercisesTableTableManager(_$AppDatabase db, $HiitExercisesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$HiitExercisesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$HiitExercisesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$HiitExercisesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> circuitId = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> type = const Value.absent(),
+                Value<int> value = const Value.absent(),
+                Value<int> orderIndex = const Value.absent(),
+              }) => HiitExercisesCompanion(
+                id: id,
+                circuitId: circuitId,
+                name: name,
+                type: type,
+                value: value,
+                orderIndex: orderIndex,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int circuitId,
+                required String name,
+                required String type,
+                required int value,
+                required int orderIndex,
+              }) => HiitExercisesCompanion.insert(
+                id: id,
+                circuitId: circuitId,
+                name: name,
+                type: type,
+                value: value,
+                orderIndex: orderIndex,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$HiitExercisesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({circuitId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (circuitId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.circuitId,
+                                referencedTable: $$HiitExercisesTableReferences
+                                    ._circuitIdTable(db),
+                                referencedColumn: $$HiitExercisesTableReferences
+                                    ._circuitIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$HiitExercisesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $HiitExercisesTable,
+      HiitExercise,
+      $$HiitExercisesTableFilterComposer,
+      $$HiitExercisesTableOrderingComposer,
+      $$HiitExercisesTableAnnotationComposer,
+      $$HiitExercisesTableCreateCompanionBuilder,
+      $$HiitExercisesTableUpdateCompanionBuilder,
+      (HiitExercise, $$HiitExercisesTableReferences),
+      HiitExercise,
+      PrefetchHooks Function({bool circuitId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -2718,4 +4633,8 @@ class $AppDatabaseManager {
   $$ExercisesTableTableManager get exercises =>
       $$ExercisesTableTableManager(_db, _db.exercises);
   $$SetsTableTableManager get sets => $$SetsTableTableManager(_db, _db.sets);
+  $$HiitCircuitsTableTableManager get hiitCircuits =>
+      $$HiitCircuitsTableTableManager(_db, _db.hiitCircuits);
+  $$HiitExercisesTableTableManager get hiitExercises =>
+      $$HiitExercisesTableTableManager(_db, _db.hiitExercises);
 }

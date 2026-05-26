@@ -48,4 +48,8 @@ class SessionsDao extends DatabaseAccessor<AppDatabase>
     await insertSession(WorkoutSessionsCompanion(date: Value(date)));
     return (await getByDate(date))!;
   }
+
+  Future<void> updateType(int id, String type) =>
+      (update(workoutSessions)..where((t) => t.id.equals(id)))
+          .write(WorkoutSessionsCompanion(type: Value(type)));
 }
