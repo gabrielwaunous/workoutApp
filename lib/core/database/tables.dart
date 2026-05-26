@@ -55,3 +55,20 @@ class Sets extends Table {
   BoolColumn get isPartial => boolean().withDefault(const Constant(false))();
   BoolColumn get isDone => boolean().withDefault(const Constant(false))();
 }
+
+class HiitWorkoutLogs extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get sessionId => integer().references(WorkoutSessions, #id)();
+  DateTimeColumn get startedAt => dateTime()();
+  DateTimeColumn get completedAt => dateTime().nullable()();
+}
+
+class HiitExerciseLogs extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get workoutLogId => integer().references(HiitWorkoutLogs, #id)();
+  IntColumn get exerciseId => integer().references(HiitExercises, #id)();
+  IntColumn get round => integer()();
+  // reps: count tapped; time: exercise.value (always completed fully)
+  IntColumn get actualValue => integer()();
+  DateTimeColumn get completedAt => dateTime()();
+}

@@ -2435,6 +2435,742 @@ class HiitExercisesCompanion extends UpdateCompanion<HiitExercise> {
   }
 }
 
+class $HiitWorkoutLogsTable extends HiitWorkoutLogs
+    with TableInfo<$HiitWorkoutLogsTable, HiitWorkoutLog> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $HiitWorkoutLogsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _sessionIdMeta = const VerificationMeta(
+    'sessionId',
+  );
+  @override
+  late final GeneratedColumn<int> sessionId = GeneratedColumn<int>(
+    'session_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES workout_sessions (id)',
+    ),
+  );
+  static const VerificationMeta _startedAtMeta = const VerificationMeta(
+    'startedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startedAt = GeneratedColumn<DateTime>(
+    'started_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _completedAtMeta = const VerificationMeta(
+    'completedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> completedAt = GeneratedColumn<DateTime>(
+    'completed_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, sessionId, startedAt, completedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'hiit_workout_logs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<HiitWorkoutLog> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('session_id')) {
+      context.handle(
+        _sessionIdMeta,
+        sessionId.isAcceptableOrUnknown(data['session_id']!, _sessionIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sessionIdMeta);
+    }
+    if (data.containsKey('started_at')) {
+      context.handle(
+        _startedAtMeta,
+        startedAt.isAcceptableOrUnknown(data['started_at']!, _startedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startedAtMeta);
+    }
+    if (data.containsKey('completed_at')) {
+      context.handle(
+        _completedAtMeta,
+        completedAt.isAcceptableOrUnknown(
+          data['completed_at']!,
+          _completedAtMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  HiitWorkoutLog map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return HiitWorkoutLog(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      sessionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}session_id'],
+      )!,
+      startedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}started_at'],
+      )!,
+      completedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}completed_at'],
+      ),
+    );
+  }
+
+  @override
+  $HiitWorkoutLogsTable createAlias(String alias) {
+    return $HiitWorkoutLogsTable(attachedDatabase, alias);
+  }
+}
+
+class HiitWorkoutLog extends DataClass implements Insertable<HiitWorkoutLog> {
+  final int id;
+  final int sessionId;
+  final DateTime startedAt;
+  final DateTime? completedAt;
+  const HiitWorkoutLog({
+    required this.id,
+    required this.sessionId,
+    required this.startedAt,
+    this.completedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['session_id'] = Variable<int>(sessionId);
+    map['started_at'] = Variable<DateTime>(startedAt);
+    if (!nullToAbsent || completedAt != null) {
+      map['completed_at'] = Variable<DateTime>(completedAt);
+    }
+    return map;
+  }
+
+  HiitWorkoutLogsCompanion toCompanion(bool nullToAbsent) {
+    return HiitWorkoutLogsCompanion(
+      id: Value(id),
+      sessionId: Value(sessionId),
+      startedAt: Value(startedAt),
+      completedAt: completedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(completedAt),
+    );
+  }
+
+  factory HiitWorkoutLog.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return HiitWorkoutLog(
+      id: serializer.fromJson<int>(json['id']),
+      sessionId: serializer.fromJson<int>(json['sessionId']),
+      startedAt: serializer.fromJson<DateTime>(json['startedAt']),
+      completedAt: serializer.fromJson<DateTime?>(json['completedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'sessionId': serializer.toJson<int>(sessionId),
+      'startedAt': serializer.toJson<DateTime>(startedAt),
+      'completedAt': serializer.toJson<DateTime?>(completedAt),
+    };
+  }
+
+  HiitWorkoutLog copyWith({
+    int? id,
+    int? sessionId,
+    DateTime? startedAt,
+    Value<DateTime?> completedAt = const Value.absent(),
+  }) => HiitWorkoutLog(
+    id: id ?? this.id,
+    sessionId: sessionId ?? this.sessionId,
+    startedAt: startedAt ?? this.startedAt,
+    completedAt: completedAt.present ? completedAt.value : this.completedAt,
+  );
+  HiitWorkoutLog copyWithCompanion(HiitWorkoutLogsCompanion data) {
+    return HiitWorkoutLog(
+      id: data.id.present ? data.id.value : this.id,
+      sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
+      startedAt: data.startedAt.present ? data.startedAt.value : this.startedAt,
+      completedAt: data.completedAt.present
+          ? data.completedAt.value
+          : this.completedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HiitWorkoutLog(')
+          ..write('id: $id, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('completedAt: $completedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, sessionId, startedAt, completedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is HiitWorkoutLog &&
+          other.id == this.id &&
+          other.sessionId == this.sessionId &&
+          other.startedAt == this.startedAt &&
+          other.completedAt == this.completedAt);
+}
+
+class HiitWorkoutLogsCompanion extends UpdateCompanion<HiitWorkoutLog> {
+  final Value<int> id;
+  final Value<int> sessionId;
+  final Value<DateTime> startedAt;
+  final Value<DateTime?> completedAt;
+  const HiitWorkoutLogsCompanion({
+    this.id = const Value.absent(),
+    this.sessionId = const Value.absent(),
+    this.startedAt = const Value.absent(),
+    this.completedAt = const Value.absent(),
+  });
+  HiitWorkoutLogsCompanion.insert({
+    this.id = const Value.absent(),
+    required int sessionId,
+    required DateTime startedAt,
+    this.completedAt = const Value.absent(),
+  }) : sessionId = Value(sessionId),
+       startedAt = Value(startedAt);
+  static Insertable<HiitWorkoutLog> custom({
+    Expression<int>? id,
+    Expression<int>? sessionId,
+    Expression<DateTime>? startedAt,
+    Expression<DateTime>? completedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (sessionId != null) 'session_id': sessionId,
+      if (startedAt != null) 'started_at': startedAt,
+      if (completedAt != null) 'completed_at': completedAt,
+    });
+  }
+
+  HiitWorkoutLogsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? sessionId,
+    Value<DateTime>? startedAt,
+    Value<DateTime?>? completedAt,
+  }) {
+    return HiitWorkoutLogsCompanion(
+      id: id ?? this.id,
+      sessionId: sessionId ?? this.sessionId,
+      startedAt: startedAt ?? this.startedAt,
+      completedAt: completedAt ?? this.completedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (sessionId.present) {
+      map['session_id'] = Variable<int>(sessionId.value);
+    }
+    if (startedAt.present) {
+      map['started_at'] = Variable<DateTime>(startedAt.value);
+    }
+    if (completedAt.present) {
+      map['completed_at'] = Variable<DateTime>(completedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HiitWorkoutLogsCompanion(')
+          ..write('id: $id, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('completedAt: $completedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $HiitExerciseLogsTable extends HiitExerciseLogs
+    with TableInfo<$HiitExerciseLogsTable, HiitExerciseLog> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $HiitExerciseLogsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _workoutLogIdMeta = const VerificationMeta(
+    'workoutLogId',
+  );
+  @override
+  late final GeneratedColumn<int> workoutLogId = GeneratedColumn<int>(
+    'workout_log_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES hiit_workout_logs (id)',
+    ),
+  );
+  static const VerificationMeta _exerciseIdMeta = const VerificationMeta(
+    'exerciseId',
+  );
+  @override
+  late final GeneratedColumn<int> exerciseId = GeneratedColumn<int>(
+    'exercise_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES hiit_exercises (id)',
+    ),
+  );
+  static const VerificationMeta _roundMeta = const VerificationMeta('round');
+  @override
+  late final GeneratedColumn<int> round = GeneratedColumn<int>(
+    'round',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _actualValueMeta = const VerificationMeta(
+    'actualValue',
+  );
+  @override
+  late final GeneratedColumn<int> actualValue = GeneratedColumn<int>(
+    'actual_value',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _completedAtMeta = const VerificationMeta(
+    'completedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> completedAt = GeneratedColumn<DateTime>(
+    'completed_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    workoutLogId,
+    exerciseId,
+    round,
+    actualValue,
+    completedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'hiit_exercise_logs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<HiitExerciseLog> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('workout_log_id')) {
+      context.handle(
+        _workoutLogIdMeta,
+        workoutLogId.isAcceptableOrUnknown(
+          data['workout_log_id']!,
+          _workoutLogIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_workoutLogIdMeta);
+    }
+    if (data.containsKey('exercise_id')) {
+      context.handle(
+        _exerciseIdMeta,
+        exerciseId.isAcceptableOrUnknown(data['exercise_id']!, _exerciseIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_exerciseIdMeta);
+    }
+    if (data.containsKey('round')) {
+      context.handle(
+        _roundMeta,
+        round.isAcceptableOrUnknown(data['round']!, _roundMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_roundMeta);
+    }
+    if (data.containsKey('actual_value')) {
+      context.handle(
+        _actualValueMeta,
+        actualValue.isAcceptableOrUnknown(
+          data['actual_value']!,
+          _actualValueMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_actualValueMeta);
+    }
+    if (data.containsKey('completed_at')) {
+      context.handle(
+        _completedAtMeta,
+        completedAt.isAcceptableOrUnknown(
+          data['completed_at']!,
+          _completedAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_completedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  HiitExerciseLog map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return HiitExerciseLog(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      workoutLogId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}workout_log_id'],
+      )!,
+      exerciseId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}exercise_id'],
+      )!,
+      round: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}round'],
+      )!,
+      actualValue: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}actual_value'],
+      )!,
+      completedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}completed_at'],
+      )!,
+    );
+  }
+
+  @override
+  $HiitExerciseLogsTable createAlias(String alias) {
+    return $HiitExerciseLogsTable(attachedDatabase, alias);
+  }
+}
+
+class HiitExerciseLog extends DataClass implements Insertable<HiitExerciseLog> {
+  final int id;
+  final int workoutLogId;
+  final int exerciseId;
+  final int round;
+  final int actualValue;
+  final DateTime completedAt;
+  const HiitExerciseLog({
+    required this.id,
+    required this.workoutLogId,
+    required this.exerciseId,
+    required this.round,
+    required this.actualValue,
+    required this.completedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['workout_log_id'] = Variable<int>(workoutLogId);
+    map['exercise_id'] = Variable<int>(exerciseId);
+    map['round'] = Variable<int>(round);
+    map['actual_value'] = Variable<int>(actualValue);
+    map['completed_at'] = Variable<DateTime>(completedAt);
+    return map;
+  }
+
+  HiitExerciseLogsCompanion toCompanion(bool nullToAbsent) {
+    return HiitExerciseLogsCompanion(
+      id: Value(id),
+      workoutLogId: Value(workoutLogId),
+      exerciseId: Value(exerciseId),
+      round: Value(round),
+      actualValue: Value(actualValue),
+      completedAt: Value(completedAt),
+    );
+  }
+
+  factory HiitExerciseLog.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return HiitExerciseLog(
+      id: serializer.fromJson<int>(json['id']),
+      workoutLogId: serializer.fromJson<int>(json['workoutLogId']),
+      exerciseId: serializer.fromJson<int>(json['exerciseId']),
+      round: serializer.fromJson<int>(json['round']),
+      actualValue: serializer.fromJson<int>(json['actualValue']),
+      completedAt: serializer.fromJson<DateTime>(json['completedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'workoutLogId': serializer.toJson<int>(workoutLogId),
+      'exerciseId': serializer.toJson<int>(exerciseId),
+      'round': serializer.toJson<int>(round),
+      'actualValue': serializer.toJson<int>(actualValue),
+      'completedAt': serializer.toJson<DateTime>(completedAt),
+    };
+  }
+
+  HiitExerciseLog copyWith({
+    int? id,
+    int? workoutLogId,
+    int? exerciseId,
+    int? round,
+    int? actualValue,
+    DateTime? completedAt,
+  }) => HiitExerciseLog(
+    id: id ?? this.id,
+    workoutLogId: workoutLogId ?? this.workoutLogId,
+    exerciseId: exerciseId ?? this.exerciseId,
+    round: round ?? this.round,
+    actualValue: actualValue ?? this.actualValue,
+    completedAt: completedAt ?? this.completedAt,
+  );
+  HiitExerciseLog copyWithCompanion(HiitExerciseLogsCompanion data) {
+    return HiitExerciseLog(
+      id: data.id.present ? data.id.value : this.id,
+      workoutLogId: data.workoutLogId.present
+          ? data.workoutLogId.value
+          : this.workoutLogId,
+      exerciseId: data.exerciseId.present
+          ? data.exerciseId.value
+          : this.exerciseId,
+      round: data.round.present ? data.round.value : this.round,
+      actualValue: data.actualValue.present
+          ? data.actualValue.value
+          : this.actualValue,
+      completedAt: data.completedAt.present
+          ? data.completedAt.value
+          : this.completedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HiitExerciseLog(')
+          ..write('id: $id, ')
+          ..write('workoutLogId: $workoutLogId, ')
+          ..write('exerciseId: $exerciseId, ')
+          ..write('round: $round, ')
+          ..write('actualValue: $actualValue, ')
+          ..write('completedAt: $completedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    workoutLogId,
+    exerciseId,
+    round,
+    actualValue,
+    completedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is HiitExerciseLog &&
+          other.id == this.id &&
+          other.workoutLogId == this.workoutLogId &&
+          other.exerciseId == this.exerciseId &&
+          other.round == this.round &&
+          other.actualValue == this.actualValue &&
+          other.completedAt == this.completedAt);
+}
+
+class HiitExerciseLogsCompanion extends UpdateCompanion<HiitExerciseLog> {
+  final Value<int> id;
+  final Value<int> workoutLogId;
+  final Value<int> exerciseId;
+  final Value<int> round;
+  final Value<int> actualValue;
+  final Value<DateTime> completedAt;
+  const HiitExerciseLogsCompanion({
+    this.id = const Value.absent(),
+    this.workoutLogId = const Value.absent(),
+    this.exerciseId = const Value.absent(),
+    this.round = const Value.absent(),
+    this.actualValue = const Value.absent(),
+    this.completedAt = const Value.absent(),
+  });
+  HiitExerciseLogsCompanion.insert({
+    this.id = const Value.absent(),
+    required int workoutLogId,
+    required int exerciseId,
+    required int round,
+    required int actualValue,
+    required DateTime completedAt,
+  }) : workoutLogId = Value(workoutLogId),
+       exerciseId = Value(exerciseId),
+       round = Value(round),
+       actualValue = Value(actualValue),
+       completedAt = Value(completedAt);
+  static Insertable<HiitExerciseLog> custom({
+    Expression<int>? id,
+    Expression<int>? workoutLogId,
+    Expression<int>? exerciseId,
+    Expression<int>? round,
+    Expression<int>? actualValue,
+    Expression<DateTime>? completedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (workoutLogId != null) 'workout_log_id': workoutLogId,
+      if (exerciseId != null) 'exercise_id': exerciseId,
+      if (round != null) 'round': round,
+      if (actualValue != null) 'actual_value': actualValue,
+      if (completedAt != null) 'completed_at': completedAt,
+    });
+  }
+
+  HiitExerciseLogsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? workoutLogId,
+    Value<int>? exerciseId,
+    Value<int>? round,
+    Value<int>? actualValue,
+    Value<DateTime>? completedAt,
+  }) {
+    return HiitExerciseLogsCompanion(
+      id: id ?? this.id,
+      workoutLogId: workoutLogId ?? this.workoutLogId,
+      exerciseId: exerciseId ?? this.exerciseId,
+      round: round ?? this.round,
+      actualValue: actualValue ?? this.actualValue,
+      completedAt: completedAt ?? this.completedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (workoutLogId.present) {
+      map['workout_log_id'] = Variable<int>(workoutLogId.value);
+    }
+    if (exerciseId.present) {
+      map['exercise_id'] = Variable<int>(exerciseId.value);
+    }
+    if (round.present) {
+      map['round'] = Variable<int>(round.value);
+    }
+    if (actualValue.present) {
+      map['actual_value'] = Variable<int>(actualValue.value);
+    }
+    if (completedAt.present) {
+      map['completed_at'] = Variable<DateTime>(completedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HiitExerciseLogsCompanion(')
+          ..write('id: $id, ')
+          ..write('workoutLogId: $workoutLogId, ')
+          ..write('exerciseId: $exerciseId, ')
+          ..write('round: $round, ')
+          ..write('actualValue: $actualValue, ')
+          ..write('completedAt: $completedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2446,6 +3182,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SetsTable sets = $SetsTable(this);
   late final $HiitCircuitsTable hiitCircuits = $HiitCircuitsTable(this);
   late final $HiitExercisesTable hiitExercises = $HiitExercisesTable(this);
+  late final $HiitWorkoutLogsTable hiitWorkoutLogs = $HiitWorkoutLogsTable(
+    this,
+  );
+  late final $HiitExerciseLogsTable hiitExerciseLogs = $HiitExerciseLogsTable(
+    this,
+  );
   late final RoutinesDao routinesDao = RoutinesDao(this as AppDatabase);
   late final SessionsDao sessionsDao = SessionsDao(this as AppDatabase);
   late final ExercisesDao exercisesDao = ExercisesDao(this as AppDatabase);
@@ -2454,6 +3196,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this as AppDatabase,
   );
   late final HiitExercisesDao hiitExercisesDao = HiitExercisesDao(
+    this as AppDatabase,
+  );
+  late final HiitWorkoutLogsDao hiitWorkoutLogsDao = HiitWorkoutLogsDao(
     this as AppDatabase,
   );
   @override
@@ -2467,6 +3212,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     sets,
     hiitCircuits,
     hiitExercises,
+    hiitWorkoutLogs,
+    hiitExerciseLogs,
   ];
 }
 
@@ -2704,6 +3451,29 @@ final class $$WorkoutSessionsTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$HiitWorkoutLogsTable, List<HiitWorkoutLog>>
+  _hiitWorkoutLogsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.hiitWorkoutLogs,
+    aliasName: $_aliasNameGenerator(
+      db.workoutSessions.id,
+      db.hiitWorkoutLogs.sessionId,
+    ),
+  );
+
+  $$HiitWorkoutLogsTableProcessedTableManager get hiitWorkoutLogsRefs {
+    final manager = $$HiitWorkoutLogsTableTableManager(
+      $_db,
+      $_db.hiitWorkoutLogs,
+    ).filter((f) => f.sessionId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _hiitWorkoutLogsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$WorkoutSessionsTableFilterComposer
@@ -2776,6 +3546,31 @@ class $$WorkoutSessionsTableFilterComposer
           }) => $$HiitCircuitsTableFilterComposer(
             $db: $db,
             $table: $db.hiitCircuits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> hiitWorkoutLogsRefs(
+    Expression<bool> Function($$HiitWorkoutLogsTableFilterComposer f) f,
+  ) {
+    final $$HiitWorkoutLogsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.hiitWorkoutLogs,
+      getReferencedColumn: (t) => t.sessionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitWorkoutLogsTableFilterComposer(
+            $db: $db,
+            $table: $db.hiitWorkoutLogs,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -2886,6 +3681,31 @@ class $$WorkoutSessionsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> hiitWorkoutLogsRefs<T extends Object>(
+    Expression<T> Function($$HiitWorkoutLogsTableAnnotationComposer a) f,
+  ) {
+    final $$HiitWorkoutLogsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.hiitWorkoutLogs,
+      getReferencedColumn: (t) => t.sessionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitWorkoutLogsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.hiitWorkoutLogs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$WorkoutSessionsTableTableManager
@@ -2901,7 +3721,11 @@ class $$WorkoutSessionsTableTableManager
           $$WorkoutSessionsTableUpdateCompanionBuilder,
           (WorkoutSession, $$WorkoutSessionsTableReferences),
           WorkoutSession,
-          PrefetchHooks Function({bool exercisesRefs, bool hiitCircuitsRefs})
+          PrefetchHooks Function({
+            bool exercisesRefs,
+            bool hiitCircuitsRefs,
+            bool hiitWorkoutLogsRefs,
+          })
         > {
   $$WorkoutSessionsTableTableManager(
     _$AppDatabase db,
@@ -2949,12 +3773,17 @@ class $$WorkoutSessionsTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({exercisesRefs = false, hiitCircuitsRefs = false}) {
+              ({
+                exercisesRefs = false,
+                hiitCircuitsRefs = false,
+                hiitWorkoutLogsRefs = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (exercisesRefs) db.exercises,
                     if (hiitCircuitsRefs) db.hiitCircuits,
+                    if (hiitWorkoutLogsRefs) db.hiitWorkoutLogs,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -3001,6 +3830,27 @@ class $$WorkoutSessionsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (hiitWorkoutLogsRefs)
+                        await $_getPrefetchedData<
+                          WorkoutSession,
+                          $WorkoutSessionsTable,
+                          HiitWorkoutLog
+                        >(
+                          currentTable: table,
+                          referencedTable: $$WorkoutSessionsTableReferences
+                              ._hiitWorkoutLogsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$WorkoutSessionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).hiitWorkoutLogsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.sessionId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -3021,7 +3871,11 @@ typedef $$WorkoutSessionsTableProcessedTableManager =
       $$WorkoutSessionsTableUpdateCompanionBuilder,
       (WorkoutSession, $$WorkoutSessionsTableReferences),
       WorkoutSession,
-      PrefetchHooks Function({bool exercisesRefs, bool hiitCircuitsRefs})
+      PrefetchHooks Function({
+        bool exercisesRefs,
+        bool hiitCircuitsRefs,
+        bool hiitWorkoutLogsRefs,
+      })
     >;
 typedef $$ExercisesTableCreateCompanionBuilder =
     ExercisesCompanion Function({
@@ -4329,6 +5183,29 @@ final class $$HiitExercisesTableReferences
       manager.$state.copyWith(prefetchedData: [item]),
     );
   }
+
+  static MultiTypedResultKey<$HiitExerciseLogsTable, List<HiitExerciseLog>>
+  _hiitExerciseLogsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.hiitExerciseLogs,
+    aliasName: $_aliasNameGenerator(
+      db.hiitExercises.id,
+      db.hiitExerciseLogs.exerciseId,
+    ),
+  );
+
+  $$HiitExerciseLogsTableProcessedTableManager get hiitExerciseLogsRefs {
+    final manager = $$HiitExerciseLogsTableTableManager(
+      $_db,
+      $_db.hiitExerciseLogs,
+    ).filter((f) => f.exerciseId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _hiitExerciseLogsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$HiitExercisesTableFilterComposer
@@ -4386,6 +5263,31 @@ class $$HiitExercisesTableFilterComposer
           ),
     );
     return composer;
+  }
+
+  Expression<bool> hiitExerciseLogsRefs(
+    Expression<bool> Function($$HiitExerciseLogsTableFilterComposer f) f,
+  ) {
+    final $$HiitExerciseLogsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.hiitExerciseLogs,
+      getReferencedColumn: (t) => t.exerciseId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitExerciseLogsTableFilterComposer(
+            $db: $db,
+            $table: $db.hiitExerciseLogs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
   }
 }
 
@@ -4495,6 +5397,31 @@ class $$HiitExercisesTableAnnotationComposer
     );
     return composer;
   }
+
+  Expression<T> hiitExerciseLogsRefs<T extends Object>(
+    Expression<T> Function($$HiitExerciseLogsTableAnnotationComposer a) f,
+  ) {
+    final $$HiitExerciseLogsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.hiitExerciseLogs,
+      getReferencedColumn: (t) => t.exerciseId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitExerciseLogsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.hiitExerciseLogs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$HiitExercisesTableTableManager
@@ -4510,7 +5437,7 @@ class $$HiitExercisesTableTableManager
           $$HiitExercisesTableUpdateCompanionBuilder,
           (HiitExercise, $$HiitExercisesTableReferences),
           HiitExercise,
-          PrefetchHooks Function({bool circuitId})
+          PrefetchHooks Function({bool circuitId, bool hiitExerciseLogsRefs})
         > {
   $$HiitExercisesTableTableManager(_$AppDatabase db, $HiitExercisesTable table)
     : super(
@@ -4563,7 +5490,864 @@ class $$HiitExercisesTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({circuitId = false}) {
+          prefetchHooksCallback:
+              ({circuitId = false, hiitExerciseLogsRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (hiitExerciseLogsRefs) db.hiitExerciseLogs,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (circuitId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.circuitId,
+                                    referencedTable:
+                                        $$HiitExercisesTableReferences
+                                            ._circuitIdTable(db),
+                                    referencedColumn:
+                                        $$HiitExercisesTableReferences
+                                            ._circuitIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (hiitExerciseLogsRefs)
+                        await $_getPrefetchedData<
+                          HiitExercise,
+                          $HiitExercisesTable,
+                          HiitExerciseLog
+                        >(
+                          currentTable: table,
+                          referencedTable: $$HiitExercisesTableReferences
+                              ._hiitExerciseLogsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$HiitExercisesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).hiitExerciseLogsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.exerciseId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$HiitExercisesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $HiitExercisesTable,
+      HiitExercise,
+      $$HiitExercisesTableFilterComposer,
+      $$HiitExercisesTableOrderingComposer,
+      $$HiitExercisesTableAnnotationComposer,
+      $$HiitExercisesTableCreateCompanionBuilder,
+      $$HiitExercisesTableUpdateCompanionBuilder,
+      (HiitExercise, $$HiitExercisesTableReferences),
+      HiitExercise,
+      PrefetchHooks Function({bool circuitId, bool hiitExerciseLogsRefs})
+    >;
+typedef $$HiitWorkoutLogsTableCreateCompanionBuilder =
+    HiitWorkoutLogsCompanion Function({
+      Value<int> id,
+      required int sessionId,
+      required DateTime startedAt,
+      Value<DateTime?> completedAt,
+    });
+typedef $$HiitWorkoutLogsTableUpdateCompanionBuilder =
+    HiitWorkoutLogsCompanion Function({
+      Value<int> id,
+      Value<int> sessionId,
+      Value<DateTime> startedAt,
+      Value<DateTime?> completedAt,
+    });
+
+final class $$HiitWorkoutLogsTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $HiitWorkoutLogsTable, HiitWorkoutLog> {
+  $$HiitWorkoutLogsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $WorkoutSessionsTable _sessionIdTable(_$AppDatabase db) =>
+      db.workoutSessions.createAlias(
+        $_aliasNameGenerator(
+          db.hiitWorkoutLogs.sessionId,
+          db.workoutSessions.id,
+        ),
+      );
+
+  $$WorkoutSessionsTableProcessedTableManager get sessionId {
+    final $_column = $_itemColumn<int>('session_id')!;
+
+    final manager = $$WorkoutSessionsTableTableManager(
+      $_db,
+      $_db.workoutSessions,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_sessionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$HiitExerciseLogsTable, List<HiitExerciseLog>>
+  _hiitExerciseLogsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.hiitExerciseLogs,
+    aliasName: $_aliasNameGenerator(
+      db.hiitWorkoutLogs.id,
+      db.hiitExerciseLogs.workoutLogId,
+    ),
+  );
+
+  $$HiitExerciseLogsTableProcessedTableManager get hiitExerciseLogsRefs {
+    final manager = $$HiitExerciseLogsTableTableManager(
+      $_db,
+      $_db.hiitExerciseLogs,
+    ).filter((f) => f.workoutLogId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _hiitExerciseLogsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$HiitWorkoutLogsTableFilterComposer
+    extends Composer<_$AppDatabase, $HiitWorkoutLogsTable> {
+  $$HiitWorkoutLogsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startedAt => $composableBuilder(
+    column: $table.startedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$WorkoutSessionsTableFilterComposer get sessionId {
+    final $$WorkoutSessionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.sessionId,
+      referencedTable: $db.workoutSessions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkoutSessionsTableFilterComposer(
+            $db: $db,
+            $table: $db.workoutSessions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> hiitExerciseLogsRefs(
+    Expression<bool> Function($$HiitExerciseLogsTableFilterComposer f) f,
+  ) {
+    final $$HiitExerciseLogsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.hiitExerciseLogs,
+      getReferencedColumn: (t) => t.workoutLogId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitExerciseLogsTableFilterComposer(
+            $db: $db,
+            $table: $db.hiitExerciseLogs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$HiitWorkoutLogsTableOrderingComposer
+    extends Composer<_$AppDatabase, $HiitWorkoutLogsTable> {
+  $$HiitWorkoutLogsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startedAt => $composableBuilder(
+    column: $table.startedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$WorkoutSessionsTableOrderingComposer get sessionId {
+    final $$WorkoutSessionsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.sessionId,
+      referencedTable: $db.workoutSessions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkoutSessionsTableOrderingComposer(
+            $db: $db,
+            $table: $db.workoutSessions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$HiitWorkoutLogsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $HiitWorkoutLogsTable> {
+  $$HiitWorkoutLogsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startedAt =>
+      $composableBuilder(column: $table.startedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => column,
+  );
+
+  $$WorkoutSessionsTableAnnotationComposer get sessionId {
+    final $$WorkoutSessionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.sessionId,
+      referencedTable: $db.workoutSessions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$WorkoutSessionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.workoutSessions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> hiitExerciseLogsRefs<T extends Object>(
+    Expression<T> Function($$HiitExerciseLogsTableAnnotationComposer a) f,
+  ) {
+    final $$HiitExerciseLogsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.hiitExerciseLogs,
+      getReferencedColumn: (t) => t.workoutLogId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitExerciseLogsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.hiitExerciseLogs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$HiitWorkoutLogsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $HiitWorkoutLogsTable,
+          HiitWorkoutLog,
+          $$HiitWorkoutLogsTableFilterComposer,
+          $$HiitWorkoutLogsTableOrderingComposer,
+          $$HiitWorkoutLogsTableAnnotationComposer,
+          $$HiitWorkoutLogsTableCreateCompanionBuilder,
+          $$HiitWorkoutLogsTableUpdateCompanionBuilder,
+          (HiitWorkoutLog, $$HiitWorkoutLogsTableReferences),
+          HiitWorkoutLog,
+          PrefetchHooks Function({bool sessionId, bool hiitExerciseLogsRefs})
+        > {
+  $$HiitWorkoutLogsTableTableManager(
+    _$AppDatabase db,
+    $HiitWorkoutLogsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$HiitWorkoutLogsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$HiitWorkoutLogsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$HiitWorkoutLogsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> sessionId = const Value.absent(),
+                Value<DateTime> startedAt = const Value.absent(),
+                Value<DateTime?> completedAt = const Value.absent(),
+              }) => HiitWorkoutLogsCompanion(
+                id: id,
+                sessionId: sessionId,
+                startedAt: startedAt,
+                completedAt: completedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int sessionId,
+                required DateTime startedAt,
+                Value<DateTime?> completedAt = const Value.absent(),
+              }) => HiitWorkoutLogsCompanion.insert(
+                id: id,
+                sessionId: sessionId,
+                startedAt: startedAt,
+                completedAt: completedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$HiitWorkoutLogsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({sessionId = false, hiitExerciseLogsRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (hiitExerciseLogsRefs) db.hiitExerciseLogs,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (sessionId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.sessionId,
+                                    referencedTable:
+                                        $$HiitWorkoutLogsTableReferences
+                                            ._sessionIdTable(db),
+                                    referencedColumn:
+                                        $$HiitWorkoutLogsTableReferences
+                                            ._sessionIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (hiitExerciseLogsRefs)
+                        await $_getPrefetchedData<
+                          HiitWorkoutLog,
+                          $HiitWorkoutLogsTable,
+                          HiitExerciseLog
+                        >(
+                          currentTable: table,
+                          referencedTable: $$HiitWorkoutLogsTableReferences
+                              ._hiitExerciseLogsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$HiitWorkoutLogsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).hiitExerciseLogsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.workoutLogId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$HiitWorkoutLogsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $HiitWorkoutLogsTable,
+      HiitWorkoutLog,
+      $$HiitWorkoutLogsTableFilterComposer,
+      $$HiitWorkoutLogsTableOrderingComposer,
+      $$HiitWorkoutLogsTableAnnotationComposer,
+      $$HiitWorkoutLogsTableCreateCompanionBuilder,
+      $$HiitWorkoutLogsTableUpdateCompanionBuilder,
+      (HiitWorkoutLog, $$HiitWorkoutLogsTableReferences),
+      HiitWorkoutLog,
+      PrefetchHooks Function({bool sessionId, bool hiitExerciseLogsRefs})
+    >;
+typedef $$HiitExerciseLogsTableCreateCompanionBuilder =
+    HiitExerciseLogsCompanion Function({
+      Value<int> id,
+      required int workoutLogId,
+      required int exerciseId,
+      required int round,
+      required int actualValue,
+      required DateTime completedAt,
+    });
+typedef $$HiitExerciseLogsTableUpdateCompanionBuilder =
+    HiitExerciseLogsCompanion Function({
+      Value<int> id,
+      Value<int> workoutLogId,
+      Value<int> exerciseId,
+      Value<int> round,
+      Value<int> actualValue,
+      Value<DateTime> completedAt,
+    });
+
+final class $$HiitExerciseLogsTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $HiitExerciseLogsTable, HiitExerciseLog> {
+  $$HiitExerciseLogsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $HiitWorkoutLogsTable _workoutLogIdTable(_$AppDatabase db) =>
+      db.hiitWorkoutLogs.createAlias(
+        $_aliasNameGenerator(
+          db.hiitExerciseLogs.workoutLogId,
+          db.hiitWorkoutLogs.id,
+        ),
+      );
+
+  $$HiitWorkoutLogsTableProcessedTableManager get workoutLogId {
+    final $_column = $_itemColumn<int>('workout_log_id')!;
+
+    final manager = $$HiitWorkoutLogsTableTableManager(
+      $_db,
+      $_db.hiitWorkoutLogs,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_workoutLogIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $HiitExercisesTable _exerciseIdTable(_$AppDatabase db) =>
+      db.hiitExercises.createAlias(
+        $_aliasNameGenerator(
+          db.hiitExerciseLogs.exerciseId,
+          db.hiitExercises.id,
+        ),
+      );
+
+  $$HiitExercisesTableProcessedTableManager get exerciseId {
+    final $_column = $_itemColumn<int>('exercise_id')!;
+
+    final manager = $$HiitExercisesTableTableManager(
+      $_db,
+      $_db.hiitExercises,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_exerciseIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$HiitExerciseLogsTableFilterComposer
+    extends Composer<_$AppDatabase, $HiitExerciseLogsTable> {
+  $$HiitExerciseLogsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get round => $composableBuilder(
+    column: $table.round,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get actualValue => $composableBuilder(
+    column: $table.actualValue,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$HiitWorkoutLogsTableFilterComposer get workoutLogId {
+    final $$HiitWorkoutLogsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workoutLogId,
+      referencedTable: $db.hiitWorkoutLogs,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitWorkoutLogsTableFilterComposer(
+            $db: $db,
+            $table: $db.hiitWorkoutLogs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$HiitExercisesTableFilterComposer get exerciseId {
+    final $$HiitExercisesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.exerciseId,
+      referencedTable: $db.hiitExercises,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitExercisesTableFilterComposer(
+            $db: $db,
+            $table: $db.hiitExercises,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$HiitExerciseLogsTableOrderingComposer
+    extends Composer<_$AppDatabase, $HiitExerciseLogsTable> {
+  $$HiitExerciseLogsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get round => $composableBuilder(
+    column: $table.round,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get actualValue => $composableBuilder(
+    column: $table.actualValue,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$HiitWorkoutLogsTableOrderingComposer get workoutLogId {
+    final $$HiitWorkoutLogsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workoutLogId,
+      referencedTable: $db.hiitWorkoutLogs,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitWorkoutLogsTableOrderingComposer(
+            $db: $db,
+            $table: $db.hiitWorkoutLogs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$HiitExercisesTableOrderingComposer get exerciseId {
+    final $$HiitExercisesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.exerciseId,
+      referencedTable: $db.hiitExercises,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitExercisesTableOrderingComposer(
+            $db: $db,
+            $table: $db.hiitExercises,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$HiitExerciseLogsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $HiitExerciseLogsTable> {
+  $$HiitExerciseLogsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get round =>
+      $composableBuilder(column: $table.round, builder: (column) => column);
+
+  GeneratedColumn<int> get actualValue => $composableBuilder(
+    column: $table.actualValue,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => column,
+  );
+
+  $$HiitWorkoutLogsTableAnnotationComposer get workoutLogId {
+    final $$HiitWorkoutLogsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.workoutLogId,
+      referencedTable: $db.hiitWorkoutLogs,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitWorkoutLogsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.hiitWorkoutLogs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$HiitExercisesTableAnnotationComposer get exerciseId {
+    final $$HiitExercisesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.exerciseId,
+      referencedTable: $db.hiitExercises,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$HiitExercisesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.hiitExercises,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$HiitExerciseLogsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $HiitExerciseLogsTable,
+          HiitExerciseLog,
+          $$HiitExerciseLogsTableFilterComposer,
+          $$HiitExerciseLogsTableOrderingComposer,
+          $$HiitExerciseLogsTableAnnotationComposer,
+          $$HiitExerciseLogsTableCreateCompanionBuilder,
+          $$HiitExerciseLogsTableUpdateCompanionBuilder,
+          (HiitExerciseLog, $$HiitExerciseLogsTableReferences),
+          HiitExerciseLog,
+          PrefetchHooks Function({bool workoutLogId, bool exerciseId})
+        > {
+  $$HiitExerciseLogsTableTableManager(
+    _$AppDatabase db,
+    $HiitExerciseLogsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$HiitExerciseLogsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$HiitExerciseLogsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$HiitExerciseLogsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> workoutLogId = const Value.absent(),
+                Value<int> exerciseId = const Value.absent(),
+                Value<int> round = const Value.absent(),
+                Value<int> actualValue = const Value.absent(),
+                Value<DateTime> completedAt = const Value.absent(),
+              }) => HiitExerciseLogsCompanion(
+                id: id,
+                workoutLogId: workoutLogId,
+                exerciseId: exerciseId,
+                round: round,
+                actualValue: actualValue,
+                completedAt: completedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int workoutLogId,
+                required int exerciseId,
+                required int round,
+                required int actualValue,
+                required DateTime completedAt,
+              }) => HiitExerciseLogsCompanion.insert(
+                id: id,
+                workoutLogId: workoutLogId,
+                exerciseId: exerciseId,
+                round: round,
+                actualValue: actualValue,
+                completedAt: completedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$HiitExerciseLogsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({workoutLogId = false, exerciseId = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -4583,16 +6367,33 @@ class $$HiitExercisesTableTableManager
                       dynamic
                     >
                   >(state) {
-                    if (circuitId) {
+                    if (workoutLogId) {
                       state =
                           state.withJoin(
                                 currentTable: table,
-                                currentColumn: table.circuitId,
-                                referencedTable: $$HiitExercisesTableReferences
-                                    ._circuitIdTable(db),
-                                referencedColumn: $$HiitExercisesTableReferences
-                                    ._circuitIdTable(db)
-                                    .id,
+                                currentColumn: table.workoutLogId,
+                                referencedTable:
+                                    $$HiitExerciseLogsTableReferences
+                                        ._workoutLogIdTable(db),
+                                referencedColumn:
+                                    $$HiitExerciseLogsTableReferences
+                                        ._workoutLogIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (exerciseId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.exerciseId,
+                                referencedTable:
+                                    $$HiitExerciseLogsTableReferences
+                                        ._exerciseIdTable(db),
+                                referencedColumn:
+                                    $$HiitExerciseLogsTableReferences
+                                        ._exerciseIdTable(db)
+                                        .id,
                               )
                               as T;
                     }
@@ -4608,19 +6409,19 @@ class $$HiitExercisesTableTableManager
       );
 }
 
-typedef $$HiitExercisesTableProcessedTableManager =
+typedef $$HiitExerciseLogsTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $HiitExercisesTable,
-      HiitExercise,
-      $$HiitExercisesTableFilterComposer,
-      $$HiitExercisesTableOrderingComposer,
-      $$HiitExercisesTableAnnotationComposer,
-      $$HiitExercisesTableCreateCompanionBuilder,
-      $$HiitExercisesTableUpdateCompanionBuilder,
-      (HiitExercise, $$HiitExercisesTableReferences),
-      HiitExercise,
-      PrefetchHooks Function({bool circuitId})
+      $HiitExerciseLogsTable,
+      HiitExerciseLog,
+      $$HiitExerciseLogsTableFilterComposer,
+      $$HiitExerciseLogsTableOrderingComposer,
+      $$HiitExerciseLogsTableAnnotationComposer,
+      $$HiitExerciseLogsTableCreateCompanionBuilder,
+      $$HiitExerciseLogsTableUpdateCompanionBuilder,
+      (HiitExerciseLog, $$HiitExerciseLogsTableReferences),
+      HiitExerciseLog,
+      PrefetchHooks Function({bool workoutLogId, bool exerciseId})
     >;
 
 class $AppDatabaseManager {
@@ -4637,4 +6438,8 @@ class $AppDatabaseManager {
       $$HiitCircuitsTableTableManager(_db, _db.hiitCircuits);
   $$HiitExercisesTableTableManager get hiitExercises =>
       $$HiitExercisesTableTableManager(_db, _db.hiitExercises);
+  $$HiitWorkoutLogsTableTableManager get hiitWorkoutLogs =>
+      $$HiitWorkoutLogsTableTableManager(_db, _db.hiitWorkoutLogs);
+  $$HiitExerciseLogsTableTableManager get hiitExerciseLogs =>
+      $$HiitExerciseLogsTableTableManager(_db, _db.hiitExerciseLogs);
 }
