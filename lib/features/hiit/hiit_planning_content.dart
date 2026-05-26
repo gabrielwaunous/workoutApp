@@ -7,6 +7,7 @@ import 'package:workout_app/core/theme/app_theme.dart';
 import 'package:workout_app/features/hiit/circuit_card.dart';
 import 'package:workout_app/features/hiit/edit_circuit_sheet.dart';
 import 'package:workout_app/features/hiit/providers.dart';
+import 'package:workout_app/features/hiit/workout/hiit_workout_screen.dart';
 import 'package:workout_app/providers.dart';
 
 class HiitPlanningContent extends ConsumerWidget {
@@ -123,23 +124,50 @@ class _FilledState extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+    return Stack(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Text(
-            'CIRCUITOS · ${circuits.length}',
-            style: GoogleFonts.jetBrainsMono(
-              color: AppTheme.textDim,
-              fontSize: 11,
-              letterSpacing: 0.12 * 11,
+        ListView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Text(
+                'CIRCUITOS · ${circuits.length}',
+                style: GoogleFonts.jetBrainsMono(
+                  color: AppTheme.textDim,
+                  fontSize: 11,
+                  letterSpacing: 0.12 * 11,
+                ),
+              ),
+            ),
+            ...circuits.map((c) => CircuitCard(circuit: c)),
+            const SizedBox(height: 8),
+            _AddCircuitButton(sessionId: sessionId, count: circuits.length),
+          ],
+        ),
+        Positioned(
+          left: 16,
+          right: 16,
+          bottom: 16,
+          child: FilledButton.icon(
+            icon: const Icon(Icons.play_arrow),
+            label: const Text('Iniciar'),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => HiitWorkoutScreen(sessionId: sessionId),
+              ),
+            ),
+            style: FilledButton.styleFrom(
+              backgroundColor: AppTheme.hiit,
+              foregroundColor: AppTheme.bg,
+              minimumSize: const Size.fromHeight(52),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
             ),
           ),
         ),
-        ...circuits.map((c) => CircuitCard(circuit: c)),
-        const SizedBox(height: 8),
-        _AddCircuitButton(sessionId: sessionId, count: circuits.length),
       ],
     );
   }
