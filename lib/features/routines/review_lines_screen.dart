@@ -60,7 +60,7 @@ class _ReviewState extends ConsumerState<ReviewLinesScreen> {
               dense: true,
               leading: const Icon(Icons.check_circle, color: Colors.green, size: 18),
               title: Text(ex.name),
-              subtitle: Text('${ex.sets.length} sets'),
+              subtitle: Text(_setsSummary(ex.sets)),
             ),
           ),
           if (r.unrecognized.isNotEmpty) ...[
@@ -93,6 +93,17 @@ class _ReviewState extends ConsumerState<ReviewLinesScreen> {
         ],
       ),
     );
+  }
+
+  String _setsSummary(List<ParsedSet> sets) {
+    if (sets.length == 1 && sets.first.durationSeconds != null) {
+      return '${sets.first.durationSeconds}s';
+    }
+    if (sets.every((s) => s.durationSeconds != null)) {
+      return sets.map((s) => '${s.durationSeconds}s').join(' · ');
+    }
+    final reps = sets.map((s) => s.reps?.toString() ?? '?').join(' · ');
+    return '${sets.length} ${sets.length == 1 ? 'set' : 'sets'} · $reps reps';
   }
 
   Future<void> _save() async {

@@ -5,12 +5,14 @@ class ParsedSet {
   final double? weight;
   final bool toFailure;
   final bool isPartial;
+  final int? durationSeconds;
 
   const ParsedSet({
     this.reps,
     this.weight,
     this.toFailure = false,
     this.isPartial = false,
+    this.durationSeconds,
   });
 }
 
