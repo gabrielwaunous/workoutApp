@@ -117,12 +117,14 @@ class HiitWorkoutNotifier extends StateNotifier<HiitWorkoutState> {
 
   void _logAndAdvance() {
     final s = state;
-    db.hiitWorkoutLogsDao.logExercise(
-      s.workoutLogId,
-      s.currentExercise.id,
-      s.round,
-      s.currentExercise.value,
-    );
+    db.hiitWorkoutLogsDao
+        .logExercise(
+          s.workoutLogId,
+          s.currentExercise.id,
+          s.round,
+          s.currentExercise.value,
+        )
+        .ignore();
 
     _player.play(AssetSource('sounds/beep_long.wav'));
     HapticFeedback.mediumImpact();
@@ -176,7 +178,7 @@ class HiitWorkoutNotifier extends StateNotifier<HiitWorkoutState> {
             startedAt: s.startedAt,
           );
         } else {
-          unawaited(_completeDone());
+          _completeDone().ignore();
         }
         break;
 
@@ -218,7 +220,7 @@ class HiitWorkoutNotifier extends StateNotifier<HiitWorkoutState> {
   void dispose() {
     _timer?.cancel();
     _player.dispose();
-    WakelockPlus.disable();
+    WakelockPlus.disable().ignore();
     super.dispose();
   }
 }
