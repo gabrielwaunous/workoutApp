@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -238,10 +237,10 @@ class _Segment extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color:
-                selected ? color.withOpacity(0.15) : Colors.transparent,
+                selected ? color.withValues(alpha: 0.15) : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
             border: selected
-                ? Border.all(color: color.withOpacity(0.4))
+                ? Border.all(color: color.withValues(alpha: 0.4))
                 : null,
           ),
           alignment: Alignment.center,
@@ -279,7 +278,7 @@ class _QuickChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: selected ? color.withOpacity(0.15) : AppTheme.bgChip,
+          color: selected ? color.withValues(alpha: 0.15) : AppTheme.bgChip,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: selected ? color : AppTheme.line),
         ),

@@ -40,8 +40,7 @@ class ReorderExercisesScreen extends ConsumerWidget {
           children: [
             Expanded(
               child: ReorderableListView.builder(
-                onReorder: (oldIndex, newIndex) async {
-                  if (newIndex > oldIndex) newIndex--;
+                onReorderItem: (oldIndex, newIndex) async {
                   final reordered = [...exercises];
                   final item = reordered.removeAt(oldIndex);
                   reordered.insert(newIndex, item);

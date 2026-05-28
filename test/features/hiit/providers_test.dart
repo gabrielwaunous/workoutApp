@@ -3,7 +3,6 @@ import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:workout_app/core/database/app_database.dart';
-import 'package:workout_app/core/database/tables.dart';
 import 'package:workout_app/features/hiit/providers.dart';
 import 'package:workout_app/providers.dart';
 

@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -104,6 +103,7 @@ class _EmptyState extends ConsumerWidget {
     );
     if (!context.mounted) return;
     final circuits = await db.hiitCircuitsDao.watchBySession(sessionId).first;
+    if (!context.mounted) return;
     final circuit = circuits.firstWhere((c) => c.id == id);
     showModalBottomSheet(
       context: context,
@@ -197,6 +197,7 @@ class _AddCircuitButton extends ConsumerWidget {
         if (!context.mounted) return;
         final circuits =
             await db.hiitCircuitsDao.watchBySession(sessionId).first;
+        if (!context.mounted) return;
         final circuit = circuits.firstWhere((c) => c.id == id);
         showModalBottomSheet(
           context: context,
