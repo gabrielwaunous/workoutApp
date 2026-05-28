@@ -104,6 +104,8 @@ class _Header extends StatelessWidget {
           const SizedBox(height: 6),
           Row(
             children: [
+              const Icon(Icons.loop, size: 12, color: AppTheme.hiit),
+              const SizedBox(width: 4),
               Text(
                 '${circuit.rounds} rondas',
                 style: GoogleFonts.jetBrainsMono(
@@ -112,6 +114,8 @@ class _Header extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
+              const Icon(Icons.timer, size: 12, color: AppTheme.rest),
+              const SizedBox(width: 4),
               Text(
                 restLabel,
                 style: GoogleFonts.jetBrainsMono(
@@ -214,13 +218,22 @@ class _ExerciseRow extends StatelessWidget {
               color: chipColor,
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Text(
-              valueLabel,
-              style: GoogleFonts.jetBrainsMono(
-                color: textColor,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isTime) ...[
+                  Icon(Icons.timer, size: 11, color: textColor),
+                  const SizedBox(width: 3),
+                ],
+                Text(
+                  valueLabel,
+                  style: GoogleFonts.jetBrainsMono(
+                    color: textColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(width: 8),

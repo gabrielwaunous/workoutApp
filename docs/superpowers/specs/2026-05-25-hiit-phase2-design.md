@@ -64,7 +64,7 @@ class HiitExerciseLogs extends Table {
   IntColumn get workoutLogId => integer().references(HiitWorkoutLogs, #id)();
   IntColumn get exerciseId => integer().references(HiitExercises, #id)();
   IntColumn get round => integer()();
-  IntColumn get actualValue => integer()(); // reps completed OR seconds elapsed
+  IntColumn get actualValue => integer()(); // reps: count tapped; time: exercise.value (planned, always completed fully)
   DateTimeColumn get completedAt => dateTime()();
 }
 ```

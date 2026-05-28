@@ -55,4 +55,24 @@ class SetsDao extends DatabaseAccessor<AppDatabase> with _$SetsDaoMixin {
 
   Future<void> deleteByExercise(int exerciseId) =>
       (delete(sets)..where((t) => t.exerciseId.equals(exerciseId))).go();
+
+  Stream<Map<int, double>> watchVolumeBySession() {
+    final query = select(sets).join([
+      innerJoin(exercises, exercises.id.equalsExp(sets.exerciseId)),
+    ]);
+    return query.watch().map((rows) {
+      final volumes = <int, double>{};
+      for (final row in rows) {
+        final s = row.readTable(sets);
+        final ex = row.readTable(exercises);
+        if (!s.toFailure && s.reps != null) {
+          final vol = s.weight != null
+              ? s.reps!.toDouble() * s.weight!
+              : s.reps!.toDouble();
+          volumes[ex.sessionId] = (volumes[ex.sessionId] ?? 0) + vol;
+        }
+      }
+      return volumes;
+    });
+  }
 }

@@ -67,6 +67,13 @@ class HiitWorkoutNotifier extends StateNotifier<HiitWorkoutState> {
     }
   }
 
+  void addRestSeconds(int n) {
+    if (state.phase == WorkoutPhase.exerciseRest ||
+        state.phase == WorkoutPhase.roundRest) {
+      state = state.copyWith(remainingSeconds: state.remainingSeconds + n);
+    }
+  }
+
   void pause() {
     _timer?.cancel();
     state = state.copyWith(isPaused: true);

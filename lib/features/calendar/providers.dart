@@ -53,3 +53,19 @@ final sessionsByDayProvider = StreamProvider<Map<DateTime, WorkoutSession>>(
               DateTime(s.date.year, s.date.month, s.date.day): s,
           }),
 );
+
+/// Stream of total strength volume per session ID (all sessions combined).
+final volumeBySessionProvider = StreamProvider<Map<int, double>>(
+  (ref) => ref.read(databaseProvider).setsDao.watchVolumeBySession(),
+);
+
+/// Volume per normalized date — derived from volumeBySession + sessionsByDay.
+final volumeByDayProvider = Provider<Map<DateTime, double>>((ref) {
+  final bySession = ref.watch(volumeBySessionProvider).valueOrNull ?? {};
+  final byDay = ref.watch(sessionsByDayProvider).valueOrNull ?? {};
+  return {
+    for (final entry in byDay.entries)
+      if (bySession.containsKey(entry.value.id))
+        entry.key: bySession[entry.value.id]!,
+  };
+});
