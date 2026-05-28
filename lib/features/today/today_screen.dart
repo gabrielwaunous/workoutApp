@@ -1,10 +1,12 @@
-// lib/features/today/today_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' show Value;
-import '../../core/database/app_database.dart';
-import '../../core/muscle_group_detector.dart';
-import '../../providers.dart';
+import 'package:workout_app/core/database/app_database.dart';
+import 'package:workout_app/core/muscle_group_detector.dart';
+import 'package:workout_app/core/theme/app_theme.dart';
+import 'package:workout_app/features/hiit/hiit_planning_content.dart';
+import 'package:workout_app/features/home/session_hero_card.dart';
+import 'package:workout_app/providers.dart';
 import 'exercise_card.dart';
 import 'providers.dart';
 
@@ -56,33 +58,29 @@ class TodayContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      children: [
+        SessionHeroCard(session: session),
+        Expanded(
+          child: session.type == 'hiit'
+              ? HiitPlanningContent(sessionId: session.id)
+              : _StrengthContent(session: session),
+        ),
+      ],
+    );
+  }
+}
+
+class _StrengthContent extends ConsumerWidget {
+  const _StrengthContent({required this.session});
+  final WorkoutSession session;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final exercisesAsync = ref.watch(exercisesBySessionProvider(session.id));
-    final volumeAsync = ref.watch(dailyVolumeProvider(session.id));
 
     return CustomScrollView(
       slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  _formatDate(session.date),
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                volumeAsync.when(
-                  data: (v) => Text(
-                    'Vol: ${v.toStringAsFixed(0)}',
-                    style: const TextStyle(color: Colors.blue),
-                  ),
-                  loading: () => const SizedBox.shrink(),
-                  error: (_, __) => const SizedBox.shrink(),
-                ),
-              ],
-            ),
-          ),
-        ),
         exercisesAsync.when(
           data: (exercises) {
             final items = _buildItems(exercises);
@@ -107,24 +105,40 @@ class TodayContent extends ConsumerWidget {
         ),
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: OutlinedButton(
-              onPressed: () => _addExercise(context, ref, session.id),
-              child: const Text('+ Agregar ejercicio'),
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+            child: Semantics(
+              button: true,
+              label: 'Agregar ejercicio',
+              child: GestureDetector(
+                onTap: () => _addExercise(context, ref, session.id),
+                child: Container(
+                  height: 52,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppTheme.fuerza),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.add, color: AppTheme.fuerza, size: 18),
+                      SizedBox(width: 8),
+                      Text(
+                        'Agregar ejercicio',
+                        style: TextStyle(
+                          color: AppTheme.fuerza,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ),
       ],
     );
-  }
-
-  String _formatDate(DateTime d) {
-    const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-    const months = [
-      'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
-      'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
-    ];
-    return '${days[d.weekday - 1]} ${d.day} ${months[d.month - 1]}';
   }
 
   void _addExercise(BuildContext context, WidgetRef ref, int sessionId) {
@@ -179,18 +193,18 @@ class _MuscleGroupHeader extends StatelessWidget {
         children: [
           Text(
             label.toUpperCase(),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w700,
               letterSpacing: 1.2,
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.8),
+              color: AppTheme.fuerza,
             ),
           ),
           const SizedBox(width: 8),
-          Expanded(
+          const Expanded(
             child: Divider(
               thickness: 0.5,
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+              color: Color(0x446BA8FF),
             ),
           ),
         ],

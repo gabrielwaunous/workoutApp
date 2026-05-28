@@ -1,7 +1,9 @@
 // lib/features/today/set_row.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/database/app_database.dart';
+import '../../core/theme/app_theme.dart';
 import '../../providers.dart';
 
 class SetRow extends ConsumerWidget {
@@ -25,19 +27,22 @@ class SetRow extends ConsumerWidget {
               width: 28,
               height: 28,
               decoration: BoxDecoration(
-                color: done ? Colors.green[700] : Colors.grey[850],
+                color: done ? AppTheme.fuerzaSoft : AppTheme.bgCard2,
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                  color: done ? Colors.green[400]! : Colors.grey[600]!,
+                  color: done ? AppTheme.fuerza : AppTheme.textDim,
                   width: 1.5,
                 ),
               ),
               child: done
-                  ? const Icon(Icons.check, size: 16, color: Colors.white)
+                  ? const Icon(Icons.check, size: 16, color: AppTheme.fuerza)
                   : Center(
                       child: Text(
                         '${set.setNumber}',
-                        style: const TextStyle(color: Colors.grey, fontSize: 11),
+                        style: GoogleFonts.jetBrainsMono(
+                          color: AppTheme.textDim,
+                          fontSize: 11,
+                        ),
                       ),
                     ),
             ),
@@ -48,8 +53,10 @@ class SetRow extends ConsumerWidget {
               onTap: () => _repsDialog(context, ref),
               child: _chip(
                 set.toFailure ? 'fallo' : '${set.reps ?? '?'} reps',
-                done ? Colors.green[900]! : Colors.grey[850]!,
-                done ? Colors.green[200]! : Colors.white70,
+                done ? AppTheme.fuerzaSoft : AppTheme.bgCard2,
+                done
+                    ? AppTheme.fuerza
+                    : (set.toFailure ? AppTheme.textMid : AppTheme.text),
                 strikethrough: done,
               ),
             ),
@@ -60,12 +67,8 @@ class SetRow extends ConsumerWidget {
               onTap: () => _weightDialog(context, ref),
               child: _chip(
                 set.weight != null ? '${set.weight} kg' : '+ peso',
-                set.weight != null
-                    ? (done ? Colors.green[900]! : Colors.blue[900]!)
-                    : Colors.grey[850]!,
-                set.weight != null
-                    ? (done ? Colors.green[200]! : Colors.lightBlue)
-                    : Colors.grey[600]!,
+                set.weight != null ? AppTheme.fuerzaSoft : AppTheme.bgCard2,
+                set.weight != null ? AppTheme.fuerza : AppTheme.textDim,
                 strikethrough: false,
               ),
             ),
@@ -86,7 +89,7 @@ class SetRow extends ConsumerWidget {
         child: Text(
           text,
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: GoogleFonts.jetBrainsMono(
             color: fg,
             fontSize: 13,
             decoration: strikethrough ? TextDecoration.lineThrough : null,

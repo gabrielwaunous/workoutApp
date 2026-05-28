@@ -3,6 +3,7 @@ import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/database/app_database.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/volume.dart';
 import '../../providers.dart';
 import 'providers.dart';
@@ -43,9 +44,9 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
   Widget build(BuildContext context) {
     final setsAsync = ref.watch(setsByExerciseProvider(widget.exercise.id));
     final sets = setsAsync.valueOrNull;
-    final allDone = sets != null && sets.isNotEmpty && sets.every((s) => s.isDone);
+    final allDone =
+        sets != null && sets.isNotEmpty && sets.every((s) => s.isDone);
 
-    // Auto-collapse when all sets become done
     if (allDone && _expanded) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) setState(() => _expanded = false);
@@ -54,11 +55,10 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      color: allDone ? Colors.green[950] : null,
+      color: allDone ? AppTheme.fuerzaSoft : AppTheme.bgCard2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header — always visible
           InkWell(
             onTap: allDone ? () => setState(() => _expanded = !_expanded) : null,
             borderRadius: BorderRadius.circular(12),
@@ -70,33 +70,35 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                     child: Text(
                       widget.exercise.name,
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         fontSize: 15,
-                        color: allDone ? Colors.green[300] : null,
+                        color: allDone ? AppTheme.fuerza : AppTheme.text,
                         decoration: allDone && !_expanded
                             ? TextDecoration.lineThrough
                             : null,
-                        decorationColor: Colors.green[300],
+                        decorationColor: AppTheme.fuerza,
                       ),
                     ),
                   ),
                   if (allDone && !_expanded)
-                    const Icon(Icons.check_circle, color: Colors.green, size: 18),
+                    const Icon(Icons.check_circle,
+                        color: AppTheme.fuerza, size: 18),
                   if (!allDone && sets != null)
                     Text(
                       '${calculateExerciseVolume(sets).toStringAsFixed(0)} vol',
-                      style: const TextStyle(color: Colors.blue, fontSize: 12),
+                      style:
+                          const TextStyle(color: AppTheme.fuerza, fontSize: 12),
                     ),
                   if (allDone)
                     Icon(
                       _expanded ? Icons.expand_less : Icons.expand_more,
-                      color: Colors.green[400],
+                      color: AppTheme.fuerza,
                       size: 20,
                     ),
                   if (!allDone)
                     IconButton(
                       icon: const Icon(Icons.delete_outline, size: 18),
-                      color: Colors.red[300],
+                      color: Colors.red[400],
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                       onPressed: () async {
@@ -128,8 +130,6 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
               ),
             ),
           ),
-
-          // Expandable body
           AnimatedCrossFade(
             duration: const Duration(milliseconds: 250),
             crossFadeState: _expanded
@@ -141,10 +141,17 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                 if (widget.exercise.restSeconds != null)
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
-                    child: Text(
-                      '⏱ ${_formatRest(widget.exercise.restSeconds!)}',
-                      style:
-                          TextStyle(color: Colors.orange[300], fontSize: 11),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.timer,
+                            size: 12, color: AppTheme.textMid),
+                        const SizedBox(width: 4),
+                        Text(
+                          _formatRest(widget.exercise.restSeconds!),
+                          style: const TextStyle(
+                              color: AppTheme.textMid, fontSize: 11),
+                        ),
+                      ],
                     ),
                   ),
                 if (sets != null)
@@ -165,11 +172,11 @@ class _ExerciseCardState extends ConsumerState<ExerciseCard> {
                     icon: const Icon(Icons.add, size: 16),
                     label: const Text('Serie'),
                     style: TextButton.styleFrom(
+                      foregroundColor: AppTheme.fuerza,
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       visualDensity: VisualDensity.compact,
                     ),
-                    onPressed: () =>
-                        _showAddSetDialog(sets?.length ?? 0),
+                    onPressed: () => _showAddSetDialog(sets?.length ?? 0),
                   ),
                 ),
               ],
