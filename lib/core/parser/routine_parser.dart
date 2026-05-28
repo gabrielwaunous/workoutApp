@@ -45,6 +45,9 @@ class RoutineParser {
   static final _numFirstRe = RegExp(r'^(\d+)\s+(.+)$');
   static final _namFirstRe = RegExp(r'^(.+?)\s+(\d+)$');
 
+  // "30 seg bici" — duration-first format (HIIT/cardio)
+  static final _timeFirstRe = RegExp(r'^(\d+)\s+seg\s+(.+)$', caseSensitive: false);
+
   static String _cleanLine(String line) =>
       line.replaceFirst(_bulletRe, '').trim();
 
@@ -129,6 +132,22 @@ class RoutineParser {
     // "+" compound / circuit
     if (_compoundTrigger.hasMatch(line)) {
       return _parseCompound(line);
+    }
+
+    // "30 seg bici" — duration-first (HIIT/cardio)
+    final timeMatch = _timeFirstRe.firstMatch(line);
+    if (timeMatch != null) {
+      final duration = int.parse(timeMatch.group(1)!);
+      final name = timeMatch.group(2)!.trim();
+      return _build(name, [ParsedSet(durationSeconds: duration)]);
+    }
+
+    // "8 saltos laterales al step" — reps-first format
+    final numFirst = _numFirstRe.firstMatch(line);
+    if (numFirst != null) {
+      final reps = int.parse(numFirst.group(1)!);
+      final name = numFirst.group(2)!.trim();
+      return _build(name, [ParsedSet(reps: reps)]);
     }
 
     return null;
