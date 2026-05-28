@@ -9,11 +9,11 @@ import 'package:workout_app/features/hiit/workout/hiit_workout_state.dart';
 void main() {
   setUpAll(() {
     TestWidgetsFlutterBinding.ensureInitialized();
-    // Mock wakelock_plus
+    // Mock wakelock_plus (v1.6+ uses Pigeon, not MethodChannel)
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-      const MethodChannel('dev.fluttercommunity.plus/wakelock'),
-      (_) async => null,
+        .setMockMessageHandler(
+      'dev.flutter.pigeon.wakelock_plus_platform_interface.WakelockPlusApi.toggle',
+      (_) async => const StandardMessageCodec().encodeMessage([null]),
     );
     // Mock audioplayers global
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
