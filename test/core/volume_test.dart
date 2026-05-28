@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:workout_app/core/database/app_database.dart';
 import 'package:workout_app/core/volume.dart';
@@ -12,6 +11,7 @@ WorkoutSet _set({int? reps, double? weight, bool toFailure = false, bool isParti
     weight: weight,
     toFailure: toFailure,
     isPartial: isPartial,
+    isDone: false,
   );
 }
 

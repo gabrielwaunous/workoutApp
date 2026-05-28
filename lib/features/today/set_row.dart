@@ -1,7 +1,9 @@
 // lib/features/today/set_row.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/database/tables.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../core/database/app_database.dart';
+import '../../core/theme/app_theme.dart';
 import '../../providers.dart';
 
 class SetRow extends ConsumerWidget {
@@ -11,23 +13,52 @@ class SetRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final done = set.isDone;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Row(
         children: [
-          SizedBox(
-            width: 28,
-            child: Text(
-              'S${set.setNumber}',
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+          GestureDetector(
+            onTap: () =>
+                ref.read(databaseProvider).setsDao.toggleDone(set.id, !done),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: done ? AppTheme.fuerzaSoft : AppTheme.bgCard2,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: done ? AppTheme.fuerza : AppTheme.textDim,
+                  width: 1.5,
+                ),
+              ),
+              child: done
+                  ? const Icon(Icons.check, size: 16, color: AppTheme.fuerza)
+                  : Center(
+                      child: Text(
+                        '${set.setNumber}',
+                        style: GoogleFonts.jetBrainsMono(
+                          color: AppTheme.textDim,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ),
             ),
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: _chip(
-              set.toFailure ? 'fallo' : '${set.reps} reps',
-              Colors.grey[850]!,
-              Colors.white70,
+            child: GestureDetector(
+              onTap: () => _repsDialog(context, ref),
+              child: _chip(
+                set.toFailure ? 'fallo' : '${set.reps ?? '?'} reps',
+                done ? AppTheme.fuerzaSoft : AppTheme.bgCard2,
+                done
+                    ? AppTheme.fuerza
+                    : (set.toFailure ? AppTheme.textMid : AppTheme.text),
+                strikethrough: done,
+              ),
             ),
           ),
           const SizedBox(width: 8),
@@ -36,8 +67,9 @@ class SetRow extends ConsumerWidget {
               onTap: () => _weightDialog(context, ref),
               child: _chip(
                 set.weight != null ? '${set.weight} kg' : '+ peso',
-                set.weight != null ? Colors.blue[900]! : Colors.grey[850]!,
-                set.weight != null ? Colors.lightBlue : Colors.grey[600]!,
+                set.weight != null ? AppTheme.fuerzaSoft : AppTheme.bgCard2,
+                set.weight != null ? AppTheme.fuerza : AppTheme.textDim,
+                strikethrough: false,
               ),
             ),
           ),
@@ -46,14 +78,81 @@ class SetRow extends ConsumerWidget {
     );
   }
 
-  Widget _chip(String text, Color bg, Color fg) => Container(
+  Widget _chip(String text, Color bg, Color fg,
+          {required bool strikethrough}) =>
+      Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(4),
         ),
-        child: Text(text, textAlign: TextAlign.center, style: TextStyle(color: fg, fontSize: 13)),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.jetBrainsMono(
+            color: fg,
+            fontSize: 13,
+            decoration: strikethrough ? TextDecoration.lineThrough : null,
+            decorationColor: fg,
+          ),
+        ),
       );
+
+  void _repsDialog(BuildContext context, WidgetRef ref) {
+    final repsCtrl = TextEditingController(
+      text: set.reps != null ? '${set.reps}' : '',
+    );
+    bool toFailure = set.toFailure;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setState) => AlertDialog(
+          title: Text('Set ${set.setNumber} — Reps'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: repsCtrl,
+                enabled: !toFailure,
+                keyboardType: TextInputType.number,
+                autofocus: !toFailure,
+                decoration: const InputDecoration(hintText: 'ej: 10'),
+              ),
+              Row(
+                children: [
+                  Checkbox(
+                    value: toFailure,
+                    onChanged: (v) => setState(() => toFailure = v ?? false),
+                  ),
+                  const Text('Al fallo'),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                final reps = toFailure
+                    ? null
+                    : int.tryParse(repsCtrl.text.trim());
+                ref
+                    .read(databaseProvider)
+                    .setsDao
+                    .updateReps(set.id, reps, toFailure);
+                Navigator.pop(ctx);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   void _weightDialog(BuildContext context, WidgetRef ref) {
     final controller = TextEditingController(

@@ -70,27 +70,129 @@ void main() {
       final s = result.exercises.first.sets;
       expect(s.last.isPartial, isTrue);
     });
+
+    test('parses "4 x fallo" with spaces around x', () {
+      final result = parser.parse('tríceps paralelas 4 x fallo');
+      expect(result.exercises.length, 1);
+      expect(result.unrecognized, isEmpty);
+      expect(result.exercises.first.sets.length, 4);
+      expect(result.exercises.first.sets.first.toFailure, isTrue);
+    });
+  });
+
+  group('compound / circuit pattern', () {
+    test('simple "Biceps Martillo 6 + 6 biceps comun c/ mancuerna"', () {
+      final result =
+          parser.parse('Biceps Martillo 6 + 6 biceps comun c/ mancuerna');
+      expect(result.exercises.length, 1);
+      expect(result.unrecognized, isEmpty);
+      expect(result.exercises.first.sets.length, 1);
+      expect(result.exercises.first.sets.first.reps, 12);
+      expect(result.exercises.first.restSeconds, isNull);
+    });
+
+    test('compound name joins components with "+"', () {
+      final result = parser.parse('Biceps Martillo 6 + 6 biceps comun');
+      expect(result.exercises.first.name, 'Biceps Martillo + biceps comun');
+    });
+
+    test('circuit with rounds and rest time', () {
+      const line =
+          'Sentadillas 3 + 3 Saltos c/caida del cajon + 5 saltos con mancuernas'
+          ' + 8 saltos asistidos c/banda'
+          ' (hacer 3 vueltas de este circuito c/2 min de pausa entre vueltas)';
+      final result = parser.parse(line);
+      expect(result.exercises.length, 1);
+      expect(result.exercises.first.sets.length, 3); // 3 vueltas
+      expect(result.exercises.first.sets.first.reps, 19); // 3+3+5+8
+      expect(result.exercises.first.restSeconds, 120); // 2 min
+    });
+
+    test('no rounds specified defaults to 1 set', () {
+      final result =
+          parser.parse('sentadillas 3 + 3 saltos C/caída del cajón + 5 saltos');
+      expect(result.exercises.first.sets.length, 1);
+      expect(result.exercises.first.sets.first.reps, 11); // 3+3+5
+    });
+
+    test('no spaces around + — "bíceps con mancuerna 8+8 bíceps martillo"', () {
+      final result = parser.parse('bíceps con mancuerna 8+8 bíceps martillo');
+      expect(result.exercises.length, 1);
+      expect(result.unrecognized, isEmpty);
+      expect(result.exercises.first.sets.first.reps, 16);
+    });
+
+    test('words between digit and + — "4 sentadillas + 4 saltos en altura"', () {
+      final result =
+          parser.parse('4 sentadillas + 4 saltos en altura en contramovimiento');
+      expect(result.exercises.length, 1);
+      expect(result.unrecognized, isEmpty);
+      expect(result.exercises.first.sets.first.reps, 8); // 4+4
+      expect(
+        result.exercises.first.name,
+        'sentadillas + saltos en altura en contramovimiento',
+      );
+    });
+  });
+
+  group('bullet stripping', () {
+    test('strips leading asterisk + space (WhatsApp bullet)', () {
+      final result = parser.parse('* press plano 4x8');
+      expect(result.exercises.length, 1);
+      expect(result.exercises.first.name, 'press plano');
+    });
+
+    test('strips leading bullet char •', () {
+      final result = parser.parse('• sentadillas 3x10');
+      expect(result.exercises.length, 1);
+      expect(result.exercises.first.name, 'sentadillas');
+    });
+  });
+
+  group('y compound pattern', () {
+    test('parses "bíceps c mancuernas 8 comunes y 8 martillo en simultáneo"', () {
+      final result =
+          parser.parse('bíceps c mancuernas 8 comunes y 8 martillo en simultáneo');
+      expect(result.exercises.length, 1);
+      expect(result.unrecognized, isEmpty);
+      expect(result.exercises.first.sets.first.reps, 16); // 8 + 8
+    });
   });
 
   group('unrecognized lines', () {
-    test('complex circuit line goes to unrecognized', () {
-      final line = 'sentadillas 3 + 3 saltos C/caída del cajón + 5 saltos';
-      final result = parser.parse(line);
-      expect(result.exercises, isEmpty);
-      expect(result.unrecognized.length, 1);
-      expect(result.unrecognized.first.original, line);
-    });
-
     test('empty lines are skipped', () {
       final result = parser.parse('\n\n');
       expect(result.exercises, isEmpty);
       expect(result.unrecognized, isEmpty);
     });
 
+    test('line with no pattern goes to unrecognized', () {
+      final result = parser.parse('esto no tiene patron reconocido');
+      expect(result.exercises, isEmpty);
+      expect(result.unrecognized.length, 1);
+    });
+
     test('section headers like "Femorales camilla 12.12.10.10" before empty line', () {
       final input = 'sentadillas 4x8\n\nremo 3x10';
       final result = parser.parse(input);
       expect(result.exercises.length, 2);
+    });
+  });
+
+  group('muscle group detection', () {
+    test('press plano 4x8 detects Pecho', () {
+      final result = parser.parse('press plano 4x8');
+      expect(result.exercises.first.muscleGroup, 'Pecho');
+    });
+
+    test('sentadillas 3x12 detects Piernas', () {
+      final result = parser.parse('sentadillas 3x12');
+      expect(result.exercises.first.muscleGroup, 'Piernas');
+    });
+
+    test('unknown exercise has null muscleGroup', () {
+      final result = parser.parse('zumba 3x20');
+      expect(result.exercises.first.muscleGroup, isNull);
     });
   });
 
